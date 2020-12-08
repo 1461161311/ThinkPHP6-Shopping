@@ -1,0 +1,1 @@
+[2020-12-08T15:09:55+08:00][error] [0]Call to undefined method think\Db::table()[E:\Code\Git-tp6\ThinkPHP6-Shopping_Project\tp\app\controller\Index.php:21]
