@@ -1,4 +1,4 @@
-<?php /*a:1:{s:77:"E:\Code\Git-tp6\ThinkPHP6-Shopping_Project\tp\app\admin\view\login\index.html";i:1608015568;}*/ ?>
+<?php /*a:1:{s:77:"E:\Code\Git-tp6\ThinkPHP6-Shopping_Project\tp\app\admin\view\login\index.html";i:1608016200;}*/ ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,8 +10,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
-    <link rel="stylesheet" href="../../../../public/static/admin/lib/layui-v2.5.4/css/layui.css" media="all">
-    <link rel="stylesheet" href="../../../../public/static/admin/css/login.css">
+    <link rel="stylesheet" href="/static/admin/lib/layui-v2.5.4/css/layui.css" media="all">
+    <link rel="stylesheet" href="/static/admin/css/login.css">
     <!--[if lt IE 9]>
     <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
     <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
@@ -42,9 +42,9 @@
         </form>
     </div>
 </div>
-<script src="../../../../public/static/admin/lib/layui-v2.5.4/layui.js" charset="utf-8"></script>
-<script src="../../../../public/static/admin/lib/jquery-3.4.1/jquery-3.4.1.min.js"></script>
-<script src="../../../../public/static/admin/js/common.js" charset="utf-8"></script>
-<script src="../../../../public/static/admin/js/login.js?v9"></script>
+<script src="/static/admin/lib/layui-v2.5.4/layui.js" charset="utf-8"></script>
+<script src="/static/admin/lib/jquery-3.4.1/jquery-3.4.1.min.js"></script>
+<script src="/static/admin/js/common.js" charset="utf-8"></script>
+<script src="/static/admin/js/login.js?v9"></script>
 </body>
 </html>
