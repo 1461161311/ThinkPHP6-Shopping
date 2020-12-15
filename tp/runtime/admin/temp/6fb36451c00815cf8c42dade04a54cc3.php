@@ -1,4 +1,4 @@
-<?php /*a:1:{s:77:"E:\Code\Git-tp6\ThinkPHP6-Shopping_Project\tp\app\admin\view\login\index.html";i:1608016200;}*/ ?>
+<?php /*a:1:{s:77:"E:\Code\Git-tp6\ThinkPHP6-Shopping_Project\tp\app\admin\view\login\index.html";i:1608021968;}*/ ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -28,15 +28,19 @@
         <form class="layui-form" action="">
             <div>
                 <i class="layui-icon layui-icon-username admin-icon"></i>
-                <input type="text" name="username" placeholder="请输入用户名" autocomplete="off" class="layui-input admin-input admin-input-username" value="admin">
+                <input type="text" name="username" placeholder="请输入用户名" autocomplete="off"
+                       class="layui-input admin-input admin-input-username" value="admin">
             </div>
             <div>
                 <i class="layui-icon layui-icon-password admin-icon"></i>
-                <input type="password" name="password" placeholder="请输入密码" autocomplete="off" class="layui-input admin-input" value="123456">
+                <input type="password" name="password" placeholder="请输入密码" autocomplete="off"
+                       class="layui-input admin-input" value="123456">
             </div>
             <div>
-                <input type="text" name="captcha" placeholder="请输入验证码" autocomplete="off" class="layui-input admin-input admin-input-verify input-val" value="">
-                <canvas id="canvas" class="admin-captcha" width="100" height="43"></canvas>
+                <input type="text" name="captcha" placeholder="请输入验证码" autocomplete="off"
+                       class="layui-input admin-input admin-input-verify input-val" value="">
+                <!--<canvas id="canvas" class="admin-captcha" width="100" height="43"></canvas>-->
+                <div class="admin-captcha"><?php echo captcha_img("","","90","30"); ?></div>
             </div>
             <button class="layui-btn admin-button" lay-submit="" lay-filter="login">登 陆</button>
         </form>

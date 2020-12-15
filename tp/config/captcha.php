@@ -5,9 +5,9 @@
 
 return [
     //验证码位数
-    'length'   => 5,
+    'length'   => 4,
     // 验证码字符集合
-    'codeSet'  => '2345678abcdefhijkmnpqrstuvwxyzABCDEFGHJKLMNPQRTUVWXY',
+    'codeSet'  => '123456789',
     // 验证码过期时间
     'expire'   => 1800,
     // 是否使用中文验证码
@@ -17,9 +17,9 @@ return [
     // 是否使用背景图
     'useImgBg' => false,
     //验证码字符大小
-    'fontSize' => 25,
+    'fontSize' => 35,
     // 是否使用混淆曲线
-    'useCurve' => true,
+    'useCurve' => false,
     //是否添加杂点
     'useNoise' => true,
     // 验证码字体 不设置则随机

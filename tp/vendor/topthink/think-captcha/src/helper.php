@@ -35,13 +35,19 @@ function captcha_src($config = null): string
  * @param $id
  * @return string
  */
-function captcha_img($id = '', $domid = ''): string
+function captcha_img($id = '', $domid = '', $width = '', $height = ''): string
 {
     $src = captcha_src($id);
-  
+
+    // 判断是否传入宽高
+    $style = "";
+    if ($width && $height) {
+        $style = "width=" . $width . " height=" . $height;
+    }
+
     $domid = empty($domid) ? $domid : "id='" . $domid . "'";
 
-    return "<img src='{$src}' alt='captcha' " . $domid . " onclick='this.src=\"{$src}?\"+Math.random();' />";
+    return "<img src='{$src}' $style alt='captcha' " . $domid . " onclick='this.src=\"{$src}?\"+Math.random();' />";
 }
 
 /**
