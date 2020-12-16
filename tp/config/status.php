@@ -11,5 +11,13 @@ return [
     // 方法未找到
     "way_not_found" => 3,
     // 控制器未找到
-    "controller_not_found" => 4
+    "controller_not_found" => 4,
+
+    // mysql 相关的状态配置
+    "mysql" => [
+        "table_normal" => 1,    // 正常
+        "table_pedding" => 2,   // 待审
+        "table_delete" => 99,   // 删除
+    ],
+
 ];
