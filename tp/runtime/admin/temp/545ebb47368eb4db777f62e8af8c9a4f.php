@@ -1,4 +1,4 @@
-<?php /*a:1:{s:77:"E:\Code\Git-tp6\ThinkPHP6-Shopping_Project\tp\app\admin\view\index\index.html";i:1608086863;}*/ ?>
+<?php /*a:1:{s:77:"E:\Code\Git-tp6\ThinkPHP6-Shopping_Project\tp\app\admin\view\index\index.html";i:1608095856;}*/ ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -95,7 +95,7 @@
 
         $('.login-out').on("click", function () {
             layer.msg('退出登录成功', function () {
-                window.location = '../../../app/admin/view/login/index.html';
+                window.location = '/admin/logout/index';
             });
         });
     });

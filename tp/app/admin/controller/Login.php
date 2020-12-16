@@ -5,11 +5,27 @@ use app\BaseController;
 use think\facade\View;
 use app\common\model\mysql\AdminUser;
 
-class Login extends BaseController{
+class Login extends AdminBase {
+
+    /**
+     * 覆写父类方法,防止死循环.
+     * 判断是否登录,如果登录,就跳转到后台首页
+     */
+    public function initialize()
+    {
+        // isLogin() 父类方法,用于判断是否登录
+        if ($this->isLogin()){
+            // 调转到后台首页
+            return $this->redirect(url("index/index"));
+        }
+    }
+
+    // 跳转登录页面
     public function index()
     {
         return View::fetch();
     }
+
 
     public function check()
     {
