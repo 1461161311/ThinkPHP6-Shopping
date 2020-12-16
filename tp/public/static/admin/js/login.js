@@ -46,7 +46,7 @@ layui.use(['form'], function () {
             success(res){
                 if(res.status == 1){
                     layer.msg('登录成功', function () {
-                        window.location = '/admin/index/index';
+                        window.location = '/admin/index/welcome';
                     });
                 }else {
                     layer.msg(res.message);
