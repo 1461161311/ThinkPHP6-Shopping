@@ -17,11 +17,11 @@ class AdminBase extends BaseController
     {
         // 继承父类方法
         parent::initialize();
-        // 判断是否登录
-        if (empty($this->isLogin())){
-            // 返回登录界面
-            return $this->redirect(url("login/index"),302);
-        }
+        // 判断是否登录   切换成中间件 Auth 来判断是否登录
+//        if (empty($this->isLogin())){
+//            // 返回登录界面
+//            return $this->redirect(url("login/index"),302);
+//        }
     }
 
     /**

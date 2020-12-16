@@ -1,11 +1,11 @@
 <?php
+
 namespace app\admin\controller;
 
-use app\BaseController;
 use think\facade\View;
-use app\common\model\mysql\AdminUser;
 
-class Login extends AdminBase {
+class Login extends AdminBase
+{
 
     /**
      * 覆写父类方法,防止死循环.

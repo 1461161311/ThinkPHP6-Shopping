@@ -1,7 +1,6 @@
 <?php
 namespace app\admin\controller;
 
-use app\BaseController;
 use think\facade\View;
 
 class Index extends AdminBase {
@@ -14,11 +13,5 @@ class Index extends AdminBase {
     {
         return View::fetch();
     }
-
-    public function tt()
-    {
-        halt(session(config_path("admin.session_admin")));
-    }
-
 
 }
