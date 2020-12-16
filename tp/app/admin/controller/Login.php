@@ -59,6 +59,11 @@ class Login extends AdminBase
             return show(config("status.error"), $validate->getError());
         }
 
+        // 验证验证码
+        if (!captcha_check($captcha)){
+            return show(config("status.error"), "验证码输入错误");
+        }
+
         // 将获取的数据与数据库中的数据对比,并捕获异常
         try {
             $adminUserObj = new \app\admin\business\AdminUser();
