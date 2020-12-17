@@ -1,4 +1,4 @@
-<?php /*a:1:{s:77:"E:\Code\Git-tp6\ThinkPHP6-Shopping_Project\tp\app\admin\view\index\index.html";i:1608119973;}*/ ?>
+<?php /*a:1:{s:77:"E:\Code\Git-tp6\ThinkPHP6-Shopping_Project\tp\app\admin\view\index\index.html";i:1608123845;}*/ ?>
 <!DOCTYPE html>
 <html>
 <head>

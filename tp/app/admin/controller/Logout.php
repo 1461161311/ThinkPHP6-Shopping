@@ -1,7 +1,9 @@
 <?php
 namespace app\admin\controller;
 
-class Logout extends AdminBase{
+use app\BaseController;
+
+class Logout extends BaseController {
 
     /**
      * 退出登录功能

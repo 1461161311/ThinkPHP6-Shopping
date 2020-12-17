@@ -8,17 +8,20 @@ class Login extends AdminBase
 {
 
     /**
+     * 继承AdminBase控制器中的方法，使用Base流来验证登录
+     * 目前使用中间件来验证登录，此方法暂不使用
+     *
      * 覆写父类方法,防止死循环.
      * 判断是否登录,如果登录,就跳转到后台首页
      */
-    public function initialize()
-    {
-        // isLogin() 父类方法,用于判断是否登录
-        if ($this->isLogin()) {
-            // 调转到后台首页
-            return $this->redirect(url("index/index"));
-        }
-    }
+//    public function initialize()
+//    {
+//        // isLogin() 父类方法,用于判断是否登录
+//        if ($this->isLogin()) {
+//            // 调转到后台首页
+//            return $this->redirect(url("index/index"));
+//        }
+//    }
 
     /**
      * 调转登录页面
