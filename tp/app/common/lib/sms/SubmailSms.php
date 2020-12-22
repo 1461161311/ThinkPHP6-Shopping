@@ -1,9 +1,10 @@
 <?php
 // 严格模式
-//declare(strict_types=1);
+declare(strict_types=1);
 
 namespace app\common\lib\sms;
 
+use GuzzleHttp\Exception\ServerException;
 use SUBMAIL_PHP_SDK\lib\MESSAGEsend;
 
 class SubmailSms
@@ -28,17 +29,22 @@ class SubmailSms
             'appkey' => config("Submail.appkey"),
             'sign_type' => config("Submail.sign_type"),
         ];
-        // 初始化 MESSAGEsend 类
-        $submail = new MESSAGEsend($message_configs);
-        // 设置短信接收的11位手机号码
-        $submail->setTo($phone);
-        // 设置短信正文,将验证码写入
-        $submail->SetContent('【毛越】您的短信验证码：' . $code . '，请在10分钟内输入。');
-        // 调用 send 方法发送短信
-        $send = $submail->send();
-        // 打印服务器返回值
-        dump($send);
 
+        try {
+            // 初始化 MESSAGEsend 类
+            $submail = new MESSAGEsend($message_configs);
+            // 设置短信接收的11位手机号码
+            $submail->setTo($phone);
+            // 设置短信正文,将验证码写入
+            $submail->SetContent('【毛越】您的短信验证码：' . $code . '，请在10分钟内输入。');
+            // 调用 send 方法发送短信
+            $send = $submail->send();
+            // 打印服务器返回值
+//            dump($send);
+        }catch (ServerException $exception){
+            return false;
+        }
+        return true;
     }
 }
 
