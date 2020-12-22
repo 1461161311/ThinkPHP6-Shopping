@@ -40,7 +40,7 @@ class SubmailSms
             // 调用 send 方法发送短信
             $send = $submail->send();
             // 打印服务器返回值
-            dump($send);
+//            dump($send);
         }catch (ServerException $exception){
             return false;
         }
