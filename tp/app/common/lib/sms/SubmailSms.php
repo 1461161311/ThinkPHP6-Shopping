@@ -6,6 +6,7 @@ namespace app\common\lib\sms;
 
 use GuzzleHttp\Exception\ServerException;
 use SUBMAIL_PHP_SDK\lib\MESSAGEsend;
+use think\facade\Log;
 
 class SubmailSms
 {
@@ -41,7 +42,11 @@ class SubmailSms
             $send = $submail->send();
             // 打印服务器返回值
 //            dump($send);
-        }catch (ServerException $exception){
+            // 设置日志记录，将访问第三方接口记录在日志中，日志目录 runtime\api\log
+            log::info("SubSms-sendCode-{$phone}-result" . json_encode($send));
+        } catch (ServerException $exception) {
+            // 设置日志记录，将访问第三方接口记录在日志中，日志目录 runtime\api\log
+            log::error("SubSms-sendCode-{$phone}-ServerException" . $exception->getMessage());
             return false;
         }
         return true;
