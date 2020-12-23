@@ -15,7 +15,7 @@ class Sms
      * @param string $type 调用哪个第三方接口，默认Sub
      * @return bool
      */
-    public static function sendCode(string $phoneNumber, int $len, $type = 'sub'): bool
+    public static function sendCode(string $phoneNumber, int $len, string $type = 'sub'): bool
     {
         // 静态调用lib下面的类库生成随机短信验证码
         $code = Num::getCode($len);
