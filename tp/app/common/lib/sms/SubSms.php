@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace app\common\lib\sms;
 
+use app\common\lib\sms\SmsBase;
 use GuzzleHttp\Exception\ServerException;
 use SUBMAIL_PHP_SDK\lib\MESSAGEsend;
 use think\facade\Log;
 
-class SubmailSms
+class SubSms implements SmsBase
 {
     /**
      * 赛邮云发送短信验证码
-     * @param string $phone
-     * @param int $code
+     * @param string $phone 手机号
+     * @param int $code 验证码
      * @return bool
      */
     public static function sendCode(string $phone, int $code): bool
