@@ -33,7 +33,7 @@ class Sms extends BaseController
         if (preg_match($g, $phoneNumber) || preg_match($g2, $phoneNumber) || preg_match($g3, $phoneNumber)) {
             // 成功验证手机号符合规范
             // 调用business层的数据
-            if (SmsBusiness::sendCode($phoneNumber)) {
+            if (SmsBusiness::sendCode($phoneNumber,4)) {
                 return show(config("status.success"), "发送验证码成功");
             }
             return show(config("status.error"), "发送验证码失败");
