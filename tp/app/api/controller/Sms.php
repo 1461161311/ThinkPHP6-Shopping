@@ -8,6 +8,10 @@ use app\common\business\Sms as SmsBusiness;
 
 class Sms extends BaseController
 {
+    /**
+     * controller层获取并验证手机号以及调用business层
+     * @return object
+     */
     public function code(): object
     {
         // 获取手机号码
@@ -18,7 +22,7 @@ class Sms extends BaseController
             'phone_number' => $phoneNumber,
         ];
 
-        // 验证数据
+        // 验证数据是否为空
         try {
             validate(\app\api\validate\User::class)->scene("send_code")->check($data);
             // 抛出异常
@@ -31,9 +35,9 @@ class Sms extends BaseController
         $g2 = "/^19[89]\d{8}$/";
         $g3 = "/^166\d{8}$/";
         if (preg_match($g, $phoneNumber) || preg_match($g2, $phoneNumber) || preg_match($g3, $phoneNumber)) {
-            // 成功验证手机号符合规范
+            // 手机号符合规范
             // 调用business层的数据
-            if (SmsBusiness::sendCode($phoneNumber)) {
+            if (SmsBusiness::sendCode($phoneNumber, 4)) {
                 return show(config("status.success"), "发送验证码成功");
             }
             return show(config("status.error"), "发送验证码失败");
