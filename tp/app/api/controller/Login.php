@@ -34,16 +34,17 @@ class Login extends BaseController
             return show(config("status.error"), $validate->getError());
         }
 
+        // 调用 business 层登录逻辑
         try {
             $result = (new \app\common\business\User())->login($data);
         } catch (\Exception $exception) {
             return show($exception->getCode(), $exception->getMessage());
         }
 
+        // 判断 business 层返回的数据
         if ($result) {
             return show(config("status.success"), "登陆成功", $result);
         }
-
         return show(config("status.error"), "登陆失败");
 
 

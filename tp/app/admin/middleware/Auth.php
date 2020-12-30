@@ -12,7 +12,6 @@ namespace app\admin\middleware;
  */
 class Auth
 {
-
     public function handle($request, \Closure $next)
     {
         // 前置中间件(在应用中的代码执行之前,就会执行前置中间件)
