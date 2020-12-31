@@ -18,6 +18,7 @@ class User extends Validate
         'phoneNumber' => 'require',
         'code' => 'require|number|min:4',
         'type' => 'require|in:1,2',
+        'sex' => 'require|in:0,1,2'
     ];
 
     // 错误提示
@@ -29,6 +30,8 @@ class User extends Validate
         'code.min' => '短信验证码不能低于4位',
         'type.require' => '类型必须',
         'type.in' => '类型数值错误',
+        'sex.require' => '性别必须',
+        'sex.in' => '性别数值错误',
     ];
 
 
@@ -38,6 +41,8 @@ class User extends Validate
         'send_code' => ['phone_number'],
         // 验证手机号，验证码，类型
         'login' => ['phone_number','code','type'],
+        // 更新用户个人信息
+        'update_user' => ['username','sex'],
     ];
 
 }

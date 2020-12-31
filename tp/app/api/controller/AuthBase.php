@@ -12,7 +12,7 @@ use think\App;
  */
 class AuthBase extends ApiBase
 {
-    public $id = 0;
+    public $userId = 0;
     public $username = "";
     public $accessToken = "";
 
@@ -48,7 +48,7 @@ class AuthBase extends ApiBase
         // 判断查询到的数据是否真实
         if (!empty($userInfo['id']) && !empty($userInfo['username'])) {
             // 将数据取出
-            $this->id = $userInfo['id'];
+            $this->userId = $userInfo['id'];
             $this->username = $userInfo['username'];
             return true;
         }

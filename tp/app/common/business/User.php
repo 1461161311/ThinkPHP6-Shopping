@@ -89,6 +89,72 @@ class User
 
     }
 
+    /**
+     * 根据 id 查询数据库，返回用户数据
+     * @param $id
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getNormalUserById($id)
+    {
+        // 调用模型层方法
+        $user = $this->userObj->getUserById($id);
+        // 验证数据
+        if (!$user || $user->status != config("status.mysql.table_normal")) {
+            return [];
+        }
+        return $user->toArray();
+    }
+
+    /**
+     * 根据用户名查询数据库，返回用户数据
+     * @param $username
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getNormalUserByUsername($username)
+    {
+        // 调用模型层方法
+        $user = $this->userObj->getUserByUsername($username);
+        // 验证数据
+        if (!$user || $user->status != config("status.mysql.table_normal")) {
+            return [];
+        }
+        return $user->toArray();
+    }
+
+    /**
+     * 更新用户个人信息
+     * @param $id
+     * @param $data
+     * @return bool
+     * @throws \think\Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function update($id, $data)
+    {
+        // 验证用户 id 是否存在
+        $user = $this->userObj->getUserById($id);
+        if (!$user) {
+            throw new \think\Exception("不存在该用户");
+        }
+
+        // 查询用户名是否重复
+        $userResult = $this->getNormalUserByUsername($data['username']);
+        if ($userResult && $userResult['id'] != $id) {
+            throw new \think\Exception("该用户已存在");
+        }
+
+        // 调用 Model 层更新数据库
+        return $this->userObj->updateById($id, $data);
+    }
+
 
 }
 
