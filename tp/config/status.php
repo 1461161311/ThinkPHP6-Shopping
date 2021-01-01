@@ -20,4 +20,9 @@ return [
         "table_delete" => 99,   // 删除
     ],
 
+    // 前端登录错误提示
+    "code_not" => -1009,
+    // 用户未登录
+    "not_login" => -1
+
 ];

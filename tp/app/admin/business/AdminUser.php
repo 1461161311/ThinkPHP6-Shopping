@@ -40,7 +40,7 @@ class AdminUser
         // 更新数据库内容
         $updateData = [
             "last_login_time" => time(),    // 最后登录时间
-//            "last_login_ip" => $this->request->ip(),    // 最后登录ip
+            "last_login_ip" => request()->ip(),    // 最后登录ip
             "update_time" => time(),    // 数据更新时间
         ];
         // 调用Model层方法,根据ID来更新数据库

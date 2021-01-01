@@ -5,16 +5,16 @@ use think\Response;
 use Throwable;
 
 /**
- * 处理不可预知的错误
+ * 处理不可预知的异常
  * Class Http
  * @package app\api\exception
  */
 class Http extends Handle {
 
     public $httpStatus = 500;
+
     /**
      * Render an exception into an HTTP response.
-     *
      * @access public
      * @param \think\Request   $request
      * @param Throwable $e
@@ -22,6 +22,15 @@ class Http extends Handle {
      */
     public function render($request, Throwable $e): Response
     {
+
+        if ($e instanceof \think\Exception){
+            return show($e->getCode(),$e->getMessage());
+        }
+
+        if ($e instanceof \think\exception\HttpResponseException){
+            return parent::render($request,$e);
+        }
+
         if(method_exists($e, "getStatusCode")) {
             $httpStatus = $e->getStatusCode();
         } else {
