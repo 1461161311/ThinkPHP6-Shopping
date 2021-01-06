@@ -18,7 +18,7 @@
       "child": [
         {
           "title": "分类管理",
-          "href": "page/classif.html",
+          "href": "/admin/Category",
           "icon": "fa fa-th-large",
           "target": "_self"
         },
