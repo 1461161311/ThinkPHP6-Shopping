@@ -55,10 +55,16 @@ class CategoryBus
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function getNormalCategorys()
+    public function getNormalCategorys($type = "admin")
     {
         // 需要获取的字段
-        $field = "id,name,pid";
+        // 后端调用该方法时
+        if ($type == "admin"){
+            $field = "id,name,pid";
+        // 前端api调用该方法时
+        }elseif ($type == "api"){
+            $field = "id as category_id,name,pid";
+        }
         // 调用 model 层方法
         try {
             $result = $this->model->getNormalCategorys($field);

@@ -47,7 +47,15 @@ class Category extends Model
         $where = [
             "status" => config("status.mysql.table_normal"),
         ];
-        return $this->where($where)->field($field)->select();
+        // 设置排序方法：优先按照 listorder 降序排序，然后再按照 id 来升序排序
+        $order = [
+            "listorder" => "desc",
+            "id" => "by",
+        ];
+        return $this->where($where)
+            ->field($field)
+            ->order($order)
+            ->select();
     }
 
     /**
