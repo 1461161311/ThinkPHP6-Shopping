@@ -6,7 +6,6 @@ use think\Model;
 
 class Category extends Model
 {
-
     /**
      * 自动写入时间，要求数据库字段必须为 create_time 和 update_time
      * @var bool
@@ -30,7 +29,9 @@ class Category extends Model
         $where = [
             "name " => $name,
         ];
-        return $this->where($where)->find();
+        return $this->where("status", "<>", config("status.mysql.table_delete"))
+            ->where($where)
+            ->find();
     }
 
     /**
@@ -146,9 +147,36 @@ class Category extends Model
             $this->getTree($info['pid']);
             return $result;
         }
-
         return $result;
+    }
 
+    /**
+     * 查询数据库
+     * @param $pid
+     * @param $field
+     * @return \think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getNormalByPid($pid, $field)
+    {
+        // pid 为可选参数。可为 0
+        $where = [
+            "pid" => $pid,
+            // 状态码必须为配置文件中配置的 正常 属性
+            "status" => config("status.mysql.table_normal")
+        ];
+
+        $order = [
+            "listorder" => "desc",
+            "id" => "by",
+        ];
+
+        return $this->where($where)
+            ->field($field)
+            ->order($order)
+            ->select();
     }
 
 

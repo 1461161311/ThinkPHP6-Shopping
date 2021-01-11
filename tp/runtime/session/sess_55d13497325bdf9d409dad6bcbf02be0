@@ -1,0 +1,1 @@
+a:1:{s:9:"adminUser";a:9:{s:2:"id";i:1;s:8:"username";s:5:"admin";s:8:"password";s:32:"e10adc3949ba59abbe56e057f20f883e";s:6:"status";i:1;s:11:"create_time";N;s:11:"update_time";s:19:"2021-01-11 11:19:04";s:15:"last_login_time";i:1610335144;s:13:"last_login_ip";s:9:"127.0.0.1";s:12:"operate_user";s:1:"0";}}

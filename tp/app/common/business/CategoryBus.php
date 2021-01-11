@@ -59,17 +59,17 @@ class CategoryBus
     {
         // 需要获取的字段
         // 后端调用该方法时
-        if ($type == "admin"){
+        if ($type == "admin") {
             $field = "id,name,pid";
-        // 前端api调用该方法时
-        }elseif ($type == "api"){
+            // 前端api调用该方法时
+        } elseif ($type == "api") {
             $field = "id as category_id,name,pid";
         }
         // 调用 model 层方法
         try {
             $result = $this->model->getNormalCategorys($field);
         } catch (\Exception $exception) {
-            throw new \think\Exception("status.error", $exception->getMessage());
+            throw new \think\Exception(config("status.error"), $exception->getMessage());
         }
         if (!$result) {
             return [];
@@ -284,6 +284,25 @@ class CategoryBus
 
         // 对数据进行倒序处理( array_reverse() 将数组中的值倒序排序 )
         $result['data'] = array_reverse($result['data']);
+        return $result;
+    }
+
+
+    /**
+     * 查询分类数据库，默认返回 id，name，pid 三个字段
+     * @param int $pid  // 可选参数。默认为0
+     * @param string $field
+     * @return array
+     */
+    public function getNormalByPid($pid = 0, $field = "id,name,pid")
+    {
+        try{
+            $result = $this->model->getNormalByPid($pid,$field);
+        }catch(\Exception $exception){
+            return [];
+        }
+
+        $result = $result->toArray();
         return $result;
     }
 

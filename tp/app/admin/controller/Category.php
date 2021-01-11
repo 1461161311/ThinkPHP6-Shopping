@@ -285,9 +285,43 @@ class Category extends AdminBase
     }
 
 
+    /**
+     * 商品添加时使用：选择商品分类功能
+     * @return string
+     */
     public function dialog()
     {
-        return view();
+        // 查询所有父级分类信息
+        $result = (new CategoryBus())->getNormalByPid();
+        // 返回到模板中
+        return View::fetch("", [
+            "category" => json_encode($result),
+        ]);
+    }
+
+
+    /**
+     * 商品添加时使用：搜索商品子分类功能
+     * @return \think\response\Json
+     */
+    public function getByPid()
+    {
+        // 获取所点击的父分类的 id,将此 id 作为 pid 来查询数据库中的子分类
+        $pid = input("param.pid", 0, "intval");
+        $result = (new CategoryBus())->getNormalByPid($pid);
+
+        // 验证数据
+        $validate = (new CategoryValidate());
+        if (!$validate->scene('categorys')->check($result)){
+            // 根据场景选择 success & error
+            return show(config("status.success"),$validate->getError());
+        }
+
+        if ($result){
+            return show(config("status.success"),"ok",$result);
+        }
+        // 根据场景选择 success & error
+        return show(config("status.success"),"数据不存在");
     }
 
 }

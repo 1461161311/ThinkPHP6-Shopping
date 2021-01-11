@@ -15,11 +15,11 @@ const layObj = {
             }
         });
     },
-    dialog(temp) {
+    dialog(temp,title='添加分类') {
         layer.open({
             type: 2
-            , area: ['600px', '500px']
-            , title: '添加分类'
+            , area: ['650px', '560px']
+            , title: title
             , shade: 0.6 //遮罩透明度
             , maxmin: false //允许全屏最小化
             , anim: 1 //0-6的动画形式，-1不开启
