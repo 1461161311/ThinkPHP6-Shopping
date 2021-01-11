@@ -5,7 +5,11 @@
 	color: red;
 }
 /*sku选择样式*/
-li{list-style: none;margin-right:10px;}
+li{
+	list-style: none;
+	margin-right: 10px;
+	margin-left: 12px;
+}
 li label{cursor: pointer;}
 li{float: left;line-height: 30px;}
 .clear{
@@ -41,7 +45,6 @@ table.skuTable td {
     border-color: #ddd;
     background-color: #ffffff;
     color:#777;
-    widows: auto;
     text-align: center;
     font-size: 12px;
 }
@@ -55,12 +58,12 @@ table.skuTable td input{
 	text-align: center;
 }
 /*输入框样式*/
-input[type="text"]{
-	height: 24px;
+input[type="text"], select{
+	height: 40px;
 	display: inline-block;
 	padding: 2px 12px;
 	font-size: 14px;
-	line-height: 24px;
+	line-height: 40px;
 	color: #555;
 	background-color: #fff;
 	background-image: none;
@@ -85,7 +88,6 @@ input[type="text"]:focus {
 	border: none;
 	background: #34495e;
 	color: white;
-	font-size: 16.5px;
 	text-decoration: none;
 	text-shadow: none;
 	-webkit-box-shadow: none;

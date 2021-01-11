@@ -44,6 +44,8 @@ class Category extends Validate
         'id' => ['id'],
         // 点击编辑修改场景
         'update' => ['id','pid', 'name'],
+        // 商品添加时选择分类场景
+        'categorys' => ['pid'],
     ];
 
 }
