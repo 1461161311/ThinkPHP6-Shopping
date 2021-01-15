@@ -2,7 +2,6 @@
 
 namespace app\admin\controller;
 
-use think\Exception;
 use think\facade\View;
 use app\common\business\CategoryBus;
 use app\admin\validate\Category as CategoryValidate;
@@ -33,7 +32,8 @@ class Category extends AdminBase
         try {
             $result = (new CategoryBus())->getLists($data, 3);
         } catch (\Exception $exception) {
-            $result = [];
+            // 当分页方法出现异常时，调用默认返回数据
+            $result = \app\common\lib\Arr::getPaginateDefaultData(3);
         }
 
         // 当点击查看分类子栏目时调用，面包屑导航功能
@@ -43,14 +43,6 @@ class Category extends AdminBase
             } catch (\Exception $exception) {
                 $res = [];
             }
-        }
-
-        // 没有子栏目，却点击子栏目时，赋一个默认值。否则页面会显示未定义的索引
-        if (!$result) {
-            $result['data'] = 0;
-            $result['total'] = 0;
-            $result['per_page'] = 0;
-            $result['current_page'] = 0;
         }
 
         // 调用模板引擎，将数据库中的数据传到模板中
@@ -308,20 +300,26 @@ class Category extends AdminBase
     {
         // 获取所点击的父分类的 id,将此 id 作为 pid 来查询数据库中的子分类
         $pid = input("param.pid", 0, "intval");
-        $result = (new CategoryBus())->getNormalByPid($pid);
 
         // 验证数据
+        $data = [
+            "pid" => $pid,
+        ];
         $validate = (new CategoryValidate());
-        if (!$validate->scene('categorys')->check($result)){
+        if (!$validate->scene('categorys')->check($data)) {
             // 根据场景选择 success & error
-            return show(config("status.success"),$validate->getError());
+            return show(config("status.success"), $validate->getError());
         }
 
-        if ($result){
-            return show(config("status.success"),"ok",$result);
+        // 调用 business 层查询数据库方法
+        $result = (new CategoryBus())->getNormalByPid($pid);
+
+        // 判断结果
+        if ($result) {
+            return show(config("status.success"), "ok", $result);
         }
         // 根据场景选择 success & error
-        return show(config("status.success"),"数据不存在");
+        return show(config("status.success"), "数据不存在");
     }
 
 }

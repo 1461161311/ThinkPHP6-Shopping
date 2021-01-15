@@ -4,15 +4,8 @@ namespace app\common\model\mysql;
 
 use think\Model;
 
-class Category extends Model
+class Category extends BaseModel
 {
-    /**
-     * 自动写入时间，要求数据库字段必须为 create_time 和 update_time
-     * @var bool
-     */
-    protected $autoWriteTimestamp = true;
-
-
     /**
      * 根据分类名查询数据库
      * @param $name
@@ -84,21 +77,6 @@ class Category extends Model
             ->paginate($num);
     }
 
-    /**
-     * 更新数据
-     * @param $id
-     * @param $data
-     * @return bool
-     */
-    public function updateById($id, $data)
-    {
-        $where = [
-            "id" => $id,
-        ];
-        // 将当前时间写入数据库
-        $data['update_time'] = time();
-        return $this->where($where)->save($data);
-    }
 
     /**
      * 查询父分类有多少个子分类

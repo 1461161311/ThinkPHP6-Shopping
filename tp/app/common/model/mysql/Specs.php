@@ -4,16 +4,8 @@ namespace app\common\model\mysql;
 
 use think\Model;
 
-class Specs extends Model
+class Specs extends BaseModel
 {
-
-    /**
-     * 自动写入时间，要求数据库字段必须为 create_time 和 update_time
-     * @var bool
-     */
-    protected $autoWriteTimestamp = true;
-
-
     /**
      * 获取规格数据
      * @return \think\Collection
@@ -71,23 +63,5 @@ class Specs extends Model
             ->where($where)
             ->find();
     }
-
-
-    /**
-     * 更新数据
-     * @param $id
-     * @param $data
-     * @return bool
-     */
-    public function updateById($id, $data)
-    {
-        $where = [
-            "id" => $id,
-        ];
-        // 更新时间
-        $data['update_time'] = time();
-        return $this->where($where)->save($data);
-    }
-
 
 }

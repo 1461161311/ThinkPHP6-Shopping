@@ -4,7 +4,7 @@ namespace app\common\business;
 
 use think\Exception;
 
-class SpecsValue
+class SpecsValue extends BaseBusiness
 {
     public $model = null;
     /**
@@ -64,24 +64,6 @@ class SpecsValue
 
         // 返回添加数据的 id
         return $this->model->id;
-    }
-
-
-    /**
-     * 更新数据状态码
-     * @param $id
-     * @param $data
-     * @return bool|\think\response\Json
-     */
-    public function updateStatus($id, $data)
-    {
-        // 调用 model 层根据 id 修改数据方法
-        try {
-            $this->model->updateById($id, $data);
-        } catch (\Exception $exception) {
-            return show(config("status.error"), $exception->getMessage());
-        }
-        return true;
     }
 
 }
