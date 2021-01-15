@@ -30,9 +30,9 @@ class Arr
     /**
      * 在首页显示多少分类数量
      * @param $data //传入的数据
-     * @param int $firsCount    // 一级分类数量
-     * @param int $secondCount  // 二级分类数量
-     * @param int $threeCount   // 三级分类数量
+     * @param int $firsCount // 一级分类数量
+     * @param int $secondCount // 二级分类数量
+     * @param int $threeCount // 三级分类数量
      * @return array
      */
     public static function sliceTreeArr($data, $firsCount = 5, $secondCount = 3, $threeCount = 5)
@@ -50,6 +50,22 @@ class Arr
             }
         }
         return $data;
+    }
+
+    /**
+     * 分页默认返回的数据。当分页方法出现异常时,调用该方法。
+     * @param $num
+     * @return array
+     */
+    public static function getPaginateDefaultData($num)
+    {
+        return [
+            "total" => 0,
+            "per_page" => $num,
+            "current_page" => 1,
+            "last_page" => 0,
+            "data" => [],
+        ];
     }
 
 }

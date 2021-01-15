@@ -40,6 +40,6 @@ class __TwigTemplate_fd7e50c722fb0745346ffdbd874c4b1bccfcaee1c748e88a82da61911cf
 
     public function getSourceContext()
     {
-        return new Twig_Source("", "login/footer.twig", "D:\\Project\\phpstudy_pro\\x64\\Release\\WWW\\phpMyAdmin4.8.5\\templates\\login\\footer.twig");
+        return new Twig_Source("", "login/footer.twig", "E:\\Code\\Git-tp6\\ThinkPHP6-Shopping_Project\\tp\\public\\phpMyAdmin4.8.5\\templates\\login\\footer.twig");
     }
 }

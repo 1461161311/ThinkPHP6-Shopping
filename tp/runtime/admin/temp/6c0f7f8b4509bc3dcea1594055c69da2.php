@@ -1,4 +1,4 @@
-<?php /*a:1:{s:78:"E:\Code\Git-tp6\ThinkPHP6-Shopping_Project\tp\app\admin\view\specs\dialog.html";i:1610345969;}*/ ?>
+<?php /*a:1:{s:78:"E:\Code\Git-tp6\ThinkPHP6-Shopping_Project\tp\app\admin\view\specs\dialog.html";i:1610346598;}*/ ?>
 <!doctype html>
 <html lang="en">
 <head>

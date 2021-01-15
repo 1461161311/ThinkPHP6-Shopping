@@ -3,7 +3,7 @@ namespace app\common\model\mysql;
 
 use think\Model;
 
-class AdminUser extends Model {
+class AdminUser extends BaseModel {
 
     /**
      * 根据用户名获取用户表数据
@@ -29,28 +29,5 @@ class AdminUser extends Model {
         return $this->where($where)->find();
 
     }
-
-    /**
-     * 根据 ID 来更新表中的数据
-     * @param $id
-     * @param $data
-     * @return bool
-     */
-    public function updateById($id,$data)
-    {
-        $id = intval($id);
-        if (empty($id) || empty($data) || !is_array($data)){
-            return false;
-        }
-
-        $where = [
-            "id" => $id,
-        ];
-
-        return $this->where($where)->save($data);
-
-    }
-
-
 
 }

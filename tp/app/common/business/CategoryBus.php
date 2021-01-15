@@ -5,7 +5,7 @@ namespace app\common\business;
 use app\common\model\mysql\Category as CategoryModel;
 use think\Exception;
 
-class CategoryBus
+class CategoryBus extends BaseBusiness
 {
     public $model = null;
 
@@ -134,27 +134,6 @@ class CategoryBus
         return $result;
     }
 
-    /**
-     * 根据 id 查询数据 (直接调用 find() 方法，不需要在 model 层写 )
-     * @param $id
-     * @return array|\think\Model
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\DbException
-     * @throws \think\db\exception\ModelNotFoundException
-     */
-    public function getById($id)
-    {
-        try {
-            $result = $this->model->find($id);
-        } catch (\Exception $exception) {
-            throw new \think\Exception("status.error", $exception->getMessage());
-        }
-        if (!$result) {
-            return [];
-        }
-        $result = $result->toArray();
-        return $result;
-    }
 
     /**
      * 更新排序字段
@@ -177,39 +156,6 @@ class CategoryBus
         // 调用 model 层方法查询数据库
         $data = [
             "listorder" => $listorder,
-        ];
-        try {
-            $result = $this->model->updateById($id, $data);
-        } catch (\Exception $exception) {
-            return false;
-        }
-
-        // 返回查询的数据
-        return $result;
-    }
-
-    /**
-     * 修改分类状态码
-     * @param $id
-     * @param $status
-     * @return bool
-     * @throws Exception
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\DbException
-     * @throws \think\db\exception\ModelNotFoundException
-     */
-    public function status($id, $status)
-    {
-        $result = $this->getById($id);
-        if (!$result) {
-            throw new \think\Exception("不存在该条记录");
-        }
-        if ($result['status'] == $status) {
-            throw new \think\Exception("状态修改前和修改后一致");
-        }
-
-        $data = [
-            "status" => intval($status),
         ];
         try {
             $result = $this->model->updateById($id, $data);

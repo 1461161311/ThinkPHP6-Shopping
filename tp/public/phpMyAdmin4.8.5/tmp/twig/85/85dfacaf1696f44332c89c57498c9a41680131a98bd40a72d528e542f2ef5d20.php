@@ -73,6 +73,6 @@ class __TwigTemplate_0ccd5299585ae6f9412ba80bd4b9b360772bf2840f1d29ee5a12b91bc17
 
     public function getSourceContext()
     {
-        return new Twig_Source("", "navigation/logo.twig", "D:\\Project\\phpstudy_pro\\x64\\Release\\WWW\\phpMyAdmin4.8.5\\templates\\navigation\\logo.twig");
+        return new Twig_Source("", "navigation/logo.twig", "E:\\Code\\Git-tp6\\ThinkPHP6-Shopping_Project\\tp\\public\\phpMyAdmin4.8.5\\templates\\navigation\\logo.twig");
     }
 }

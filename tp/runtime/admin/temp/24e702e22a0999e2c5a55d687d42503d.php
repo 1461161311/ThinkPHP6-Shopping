@@ -1,4 +1,4 @@
-<?php /*a:1:{s:75:"E:\Code\Git-tp6\ThinkPHP6-Shopping_Project\tp\app\admin\view\goods\add.html";i:1585365882;}*/ ?>
+<?php /*a:1:{s:75:"E:\Code\Git-tp6\ThinkPHP6-Shopping_Project\tp\app\admin\view\goods\add.html";i:1610627895;}*/ ?>
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -113,6 +113,20 @@
                                 <input type="radio" name="goods_specs_type" lay-filter="spec" value="2" title="多规格">
                             </div>
                         </div>
+                        <div class="layui-form-item spec-is-show">
+                            <label class="layui-form-label">市场价格</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="market_price" id="market_price" placeholder="请输入市场价格 /元"
+                                       autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item spec-is-show">
+                            <label class="layui-form-label">销售价格</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="sell_price" id="sell_price" placeholder="请输入销售价格 /元"
+                                       autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
                         <button style="display: none;" class="buttons" lay-submit lay-filter="*"></button>
                     </form>
                     <div class="layui-form-item spec-more" style="display: none">
@@ -151,25 +165,12 @@
                         <!--生成 规格 end-->
                     </div>
 
-                    <div class="layui-form-item spec-is-show">
-                        <label class="layui-form-label">市场价格</label>
-                        <div class="layui-input-inline">
-                            <input type="text" name="market_price" id="market_price" placeholder="请输入市场价格 /元"
-                                   autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-form-item spec-is-show">
-                        <label class="layui-form-label">销售价格</label>
-                        <div class="layui-input-inline">
-                            <input type="text" name="sell_price" id="sell_price" placeholder="请输入销售价格 /元"
-                                   autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
+
                     <div class="layui-form-item">
                         <label class="layui-form-label">上传 大图</label>
                         <div class="layui-input-inline">
                             <div class="layui-upload">
-                                <button type="button" class="layui-btn" id="btn_main">上传图片</button>
+                                <button type="button" class="layui-btn" id="btn_main">上传图片(1M)</button>
                                 <div class="layui-upload-list big_image">
                                     <p id="demoText"></p>
                                 </div>
@@ -180,7 +181,7 @@
                         <label class="layui-form-label">上传轮播图</label>
                         <div class="layui-input-block">
                             <div class="layui-upload">
-                                <button type="button" class="layui-btn" id="btn_banner">多图片上传</button>
+                                <button type="button" class="layui-btn" id="btn_banner">多图片上传(1M)</button>
                                 <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
                                     预览图：
                                     <div class="layui-upload-list" id="banner_img"
@@ -194,7 +195,7 @@
                         <label class="layui-form-label">上传展示图</label>
                         <div class="layui-input-block">
                             <div class="layui-upload">
-                                <button type="button" class="layui-btn" id="btn_show">图片上传</button>
+                                <button type="button" class="layui-btn" id="btn_show">图片上传(1M)</button>
                                 <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
                                     预览图：
                                     <div class="layui-upload-list" id="show_img"
@@ -216,6 +217,7 @@
             </div>
         </div>
     </div>
+    <div><?php echo token_field(); ?></div>
     <div class="layui-form-item layui-form">
         <div class="layui-input-block">
             <button type="submit" class="layui-btn" id='btnSubmit' lay-submit="" lay-filter="goods_submit">立即提交</button>
@@ -327,6 +329,7 @@
                 big_image: $('#main_img').attr('src'),
                 carousel_image: images('banner_img'),
                 recommend_image: images('show_img'),
+                __token__: $("input[name='__token__']").val(),
                 skus: skus(),
                 description: layedit.getContent(edit_index),
                 add_spec_arr: addSpecArr() // 提交的规格数据
