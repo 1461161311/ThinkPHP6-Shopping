@@ -5,7 +5,7 @@ namespace app\common\business;
 use app\common\model\mysql\Specs as SpecsModel;
 use think\Exception;
 
-class Specs
+class Specs extends BaseBusiness
 {
     public $model = null;
 
@@ -30,7 +30,8 @@ class Specs
         try {
             $list = $this->model->getLists($num);
         } catch (\Exception $exception) {
-            return [];
+            // 当分页方法出现异常时，调用默认返回数据
+            return \app\common\lib\Arr::getPaginateDefaultData(3);
         }
 
         // 转换数据
@@ -73,40 +74,6 @@ class Specs
 
 
     /**
-     * 修改规格状态码
-     * @param $id
-     * @param $status
-     * @return bool
-     * @throws Exception
-     */
-    public function status($id, $status)
-    {
-        // 验证所要修改的数据内容是否合理
-        $specs = $this->getById($id);
-        if (!$specs) {
-            throw new Exception("找不到该规格");
-        }
-        if ($status == $specs['status']) {
-            throw new Exception("状态修改前和修改后一致");
-        }
-
-        // 转换数据格式
-        $data = [
-            "status" => intval($status),
-        ];
-
-        // 调用 model 层根据 id 更改数据方法
-        try {
-            $result = $this->model->updateById($id, $data);
-        } catch (\Exception $exception) {
-            return false;
-        }
-
-        return $result;
-    }
-
-
-    /**
      * 编辑规格
      * @param $id
      * @param $data
@@ -136,32 +103,6 @@ class Specs
             return false;
         }
 
-        return $result;
-    }
-
-
-    /**
-     * 根据 id 查询数据
-     * @param $id
-     * @return array
-     * @throws Exception
-     */
-    public function getById($id)
-    {
-        // 调用 model 层根据 id 查询单条数据方法
-        try {
-            $result = $this->model->find($id);
-        } catch (\Exception $exception) {
-            throw new Exception($exception->getMessage());
-        }
-
-        // 查询失败返回空数组
-        if (!$result) {
-            return [];
-        }
-
-        // 转换查询结果格式
-        $result = $result->toArray();
         return $result;
     }
 

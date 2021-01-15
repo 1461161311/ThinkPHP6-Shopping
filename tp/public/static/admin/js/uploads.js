@@ -7,8 +7,8 @@ layui.use(['upload'], function () {
         ,url: '/admin/image/upload'
         ,done: function(res){
             //如果上传失败
-            if(res.status == 0){
-                return layer.msg('上传失败');
+            if(res.status != 1){
+                return layer.msg(res.message);
             }
             $('.big_image').html('<img  src="'+res.result.image+'"  class="layui-upload-img upload-img" id="main_img">');
         }
@@ -28,8 +28,8 @@ layui.use(['upload'], function () {
             ,done: function(res){
 
                 //如果上传失败
-                if(res.status == 0){
-                    return layer.msg('上传失败');
+                if(res.status != 1){
+                    return layer.msg(res.message);
                 }
                 $('#banner_img').append('<div class="img-wrap"><img src="'+ res.result.image +'"  class="layui-upload-img upload-img"><i class="layui-icon layui-icon-close btn-del"></i></div>')
 
@@ -53,8 +53,8 @@ layui.use(['upload'], function () {
             // }
             ,done: function(res){
                 //如果上传失败
-                if(res.status == 0){
-                    return layer.msg('上传失败');
+                if(res.status != 1){
+                    return layer.msg(res.message);
                 }
                 // obj.preview(function(index, file, result){
                 //     $('#show_img').append('<div class="img-wrap"><img src="'+ result +'"  class="layui-upload-img upload-img"><i class="layui-icon layui-icon-close btn-del"></i></div>')

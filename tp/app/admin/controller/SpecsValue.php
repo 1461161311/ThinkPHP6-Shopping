@@ -83,7 +83,7 @@ class SpecsValue extends AdminBase
         }
 
         // 调用 business 层修改方法
-        $result = (new SpecsValueBus())->updateStatus($id, $data);
+        $result = (new SpecsValueBus())->Status($id, $data);
 
         // 判断结果
         if (!$result) {
