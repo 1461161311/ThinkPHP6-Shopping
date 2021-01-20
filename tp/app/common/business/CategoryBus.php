@@ -92,11 +92,9 @@ class CategoryBus extends BaseBusiness
         try {
             $list = $this->model->getLists($data, $num);
         } catch (\Exception $exception) {
-            throw new \think\Exception("status.error", $exception->getMessage());
+            return \app\common\lib\Arr::getPaginateDefaultData(3);
         }
-        if (!$list) {
-            return [];
-        }
+
         // 将对象转换成数组
         $result = $list->toArray();
         // 将分页接口数据存入数组

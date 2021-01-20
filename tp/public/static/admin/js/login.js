@@ -35,7 +35,7 @@ layui.use(['form'], function () {
         //     return false;
         // }
 
-        // window.location = '../index.html';
+        // window.location = '../index2.html';
         // return false;
         $(".input-val").val('');
         url = "/admin/login/check";

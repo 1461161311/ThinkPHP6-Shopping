@@ -403,7 +403,7 @@ class Util
         /* Check if we have built local documentation, however
          * provide consistent URL for testsuite
          */
-        if (! defined('TESTSUITE') && @file_exists('doc/html/index.html')) {
+        if (! defined('TESTSUITE') && @file_exists('doc/html/index2.html')) {
             if ($GLOBALS['PMA_Config']->get('is_setup')) {
                 return '../doc/html/' . $url;
             }

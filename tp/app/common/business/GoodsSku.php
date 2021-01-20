@@ -51,6 +51,11 @@ class GoodsSku extends BaseBusiness
     }
 
 
+    /**
+     * 保存数据
+     * @param $data
+     * @return array|bool
+     */
     public function save($data)
     {
         if (empty($data['skus'])) {
