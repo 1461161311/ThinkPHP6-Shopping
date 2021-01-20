@@ -1,4 +1,4 @@
-<?php /*a:1:{s:80:"E:\Code\Git-tp6\ThinkPHP6-Shopping_Project\tp\app\admin\view\category\index.html";i:1609940098;}*/ ?>
+<?php /*a:1:{s:80:"E:\Code\Git-tp6\ThinkPHP6-Shopping_Project\tp\app\admin\view\category\index.html";i:1610782477;}*/ ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -31,9 +31,7 @@
 <body>
 <div class="layuimini-container">
     <div class="layuimini-main">
-        <a href="/admin/category/add">
-            <button type="button" class="layui-btn add">添 加</button>
-        </a>
+        <button type="button" class="layui-btn add">添 加</button>
         <a href="<?php echo url('index',['pid' => 0]); ?>">
             <button>分类首页</button>
         </a>
@@ -42,77 +40,78 @@
             <button><?php echo htmlentities($vo['name']); ?></button>
         </a>
         <?php endforeach; endif; else: echo "" ;endif; ?>
-        </div>
-        <div class="layui-form" style="margin-top: 20px;">
-            <table class="layui-table">
-                <colgroup>
-                    <col width="60">
-                    <col width="60">
-                    <col width="60">
-                    <col width="130">
-                    <col width="130">
-                    <col width="70">
-                    <col width="70">
-                    <col width="185">
-                </colgroup>
-                <thead>
-                <tr>
-                    <th style="text-align:center;">编号</th>
-                    <th style="text-align:center;">标题</th>
-                    <th style="text-align:center;">排序</th>
-                    <th style="text-align:center;">创建时间</th>
-                    <th style="text-align:center;">更新时间</th>
-                    <th style="text-align:center;">操作人</th>
-                    <th style="text-align:center;">状 态</th>
-                    <th style="text-align:center;">操作管理</th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php if(is_array($categorys['data']) || $categorys['data'] instanceof \think\Collection || $categorys['data'] instanceof \think\Paginator): $i = 0; $__LIST__ = $categorys['data'];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?>
-                <tr>
-                    <td align="center">
-                        <?php echo htmlentities($vo['id']); ?>
-                    </td>
-                    <td align="center">
-                        <?php echo htmlentities($vo['name']); ?>
-                    </td>
-                    <td align="center">
-                        <div class="layui-input-inline">
-                            <input type="text" value="<?php echo htmlentities($vo['listorder']); ?>" data-id="<?php echo htmlentities($vo['id']); ?>"
-                                   class="changeSort layui-input">
-                        </div>
-                    </td>
-                    <td align="center">
-                        <?php echo htmlentities($vo['create_time']); ?>
-                    </td>
-                    <td align="center">
-                        <?php echo htmlentities($vo['update_time']); ?>
-                    </td>
-                    <td align="center">
-                        <?php echo htmlentities($vo['operate_user']); ?>
-                    </td>
-
-                    <td align="center" data-id="<?php echo htmlentities($vo['id']); ?>}"><input type="checkbox" <?php if($vo['status']== 1): ?>checked <?php endif; ?>
-                        name="status"
-                        lay-skin="switch"
-                        lay-filter="switchStatus"
-                        lay-text="ON|OFF">
-                    </td>
-                    <td align="center">
-                        <a class="layui-btn layui-btn-xs layui-btn-normal"
-                           href="<?php echo url('update',['id' => $vo['id']]); ?>">编辑</a>
-                        <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete delete" data-ptype="1"
-                           lay-event="delete" data-id="<?php echo htmlentities($vo['id']); ?>}">删除</a>
-                        <a class="layui-btn layui-btn-xs layui-btn-normal" href="<?php echo url('index',['pid' => $vo['id']]); ?>">子栏目
-                            (<?php echo htmlentities($vo['childCount']); ?>)</a>
-                    </td>
-                </tr>
-                <?php endforeach; endif; else: echo "" ;endif; ?>
-                </tbody>
-            </table>
-        </div>
-        <div id="pages"></div>
     </div>
+    <div class="layui-form" style="margin-top: 20px;">
+        <table class="layui-table">
+            <colgroup>
+                <col width="60">
+                <col width="60">
+                <col width="60">
+                <col width="130">
+                <col width="130">
+                <col width="70">
+                <col width="70">
+                <col width="185">
+            </colgroup>
+            <thead>
+            <tr>
+                <th style="text-align:center;">编号</th>
+                <th style="text-align:center;">标题</th>
+                <th style="text-align:center;">排序</th>
+                <th style="text-align:center;">创建时间</th>
+                <th style="text-align:center;">更新时间</th>
+                <th style="text-align:center;">操作人</th>
+                <th style="text-align:center;">状 态</th>
+                <th style="text-align:center;">操作管理</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php if(is_array($categorys['data']) || $categorys['data'] instanceof \think\Collection || $categorys['data'] instanceof \think\Paginator): $i = 0; $__LIST__ = $categorys['data'];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?>
+            <tr>
+                <td align="center">
+                    <?php echo htmlentities($vo['id']); ?>
+                </td>
+                <td align="center">
+                    <?php echo htmlentities($vo['name']); ?>
+                </td>
+                <td align="center">
+                    <div class="layui-input-inline">
+                        <input type="text" value="<?php echo htmlentities($vo['listorder']); ?>" data-id="<?php echo htmlentities($vo['id']); ?>"
+                               class="changeSort layui-input">
+                    </div>
+                </td>
+                <td align="center">
+                    <?php echo htmlentities($vo['create_time']); ?>
+                </td>
+                <td align="center">
+                    <?php echo htmlentities($vo['update_time']); ?>
+                </td>
+                <td align="center">
+                    <?php echo htmlentities($vo['operate_user']); ?>
+                </td>
+
+                <td align="center" data-id="<?php echo htmlentities($vo['id']); ?>}"><input type="checkbox" <?php if($vo['status']== 1): ?>checked <?php endif; ?>
+                    name="status"
+                    lay-skin="switch"
+                    lay-filter="switchStatus"
+                    lay-text="ON|OFF">
+                </td>
+                <td align="center">
+                    <button type="button" class="layui-btn layui-btn-xs layui-btn-normal update" data-id="<?php echo htmlentities($vo['id']); ?>">
+                        编辑
+                    </button>
+                    <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete delete" data-ptype="1"
+                       lay-event="delete" data-id="<?php echo htmlentities($vo['id']); ?>">删除</a>
+                    <a class="layui-btn layui-btn-xs layui-btn-normal" href="<?php echo url('index',['pid' => $vo['id']]); ?>">子栏目
+                        (<?php echo htmlentities($vo['childCount']); ?>)</a>
+                </td>
+            </tr>
+            <?php endforeach; endif; else: echo "" ;endif; ?>
+            </tbody>
+        </table>
+    </div>
+    <div id="pages"></div>
+</div>
 </div>
 <script>
 </script>
@@ -138,10 +137,18 @@
         });
 
 
-        // 添加 分类
-        // $('.add').on('click', function () {
-        //     layObj.dialog("<?php echo url('add'); ?>")
-        // });
+        // 添加 规格
+        $('.add').on('click', function () {
+            layObj.dialog("<?php echo url('admin/category/add'); ?>")
+        });
+
+        // 编辑 规格
+        $('.update').on('click', function () {
+            let id = $(this).attr('data-id'); // fu
+            let url = '<?php echo url("update"); ?>?id=' + id
+            layObj.dialog(url)
+        })
+
 
         //监听状态 更改
         form.on('switch(switchStatus)', function (obj) {
