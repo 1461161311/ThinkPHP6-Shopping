@@ -1,4 +1,4 @@
-<?php /*a:1:{s:75:"E:\Code\Git-tp6\ThinkPHP6-Shopping_Project\tp\app\admin\view\goods\add.html";i:1610627895;}*/ ?>
+<?php /*a:1:{s:75:"E:\Code\Git-tp6\ThinkPHP6-Shopping_Project\tp\app\admin\view\goods\add.html";i:1610942519;}*/ ?>
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -340,7 +340,9 @@
             // 发送ajax请求
             layObj.post(url, goods_data,  (res) =>{
                 if(res.status == 1) {
-                    layer.msg("商品新增成功");
+                    layer.msg("商品新增成功",function () {
+                        window.location = "<?php echo url('add'); ?>";
+                    });
                 } else {
                     layer.msg("商品新增失败");
                 }

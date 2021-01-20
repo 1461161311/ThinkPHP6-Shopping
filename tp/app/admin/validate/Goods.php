@@ -61,7 +61,9 @@ class Goods extends Validate
             'carousel_image', 'recommend_image', 'description'],
         'goods_sku' => ['title', 'category_id', 'sub_title', 'promotion_title', 'keywords',
             'goods_unit', 'is_show_stock', 'stock', 'goods_specs_type', 'big_image',
-            'carousel_image', 'recommend_image', 'description','skus'],
+            'carousel_image', 'recommend_image', 'description', 'skus'],
+        'saveUpdate' => ['title', 'sub_title', 'promotion_title', 'keywords',
+            'goods_unit', 'is_show_stock', 'stock',  'description'],
     ];
 
 }
