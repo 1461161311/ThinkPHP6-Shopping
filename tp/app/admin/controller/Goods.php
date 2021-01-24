@@ -4,7 +4,7 @@ namespace app\admin\controller;
 
 use app\admin\validate\Goods as GoodsValidate;
 use app\common\business\Goods as GoodsBus;
-use app\common\business\CategoryBus as CategoryBus;
+use app\common\business\Category as CategoryBus;
 use think\facade\View;
 
 class Goods extends AdminBase
@@ -27,7 +27,12 @@ class Goods extends AdminBase
             $data['create_time'] = explode(" - ", $time);
         }
 
-        $result = (new GoodsBus())->getLists($data, 3);
+        $field = "";
+        $order = [
+            "id" => 'by',
+        ];
+
+        $result = (new GoodsBus())->getLists($data, $order, 3, $field);
 
         if (empty($data['title'])) {
             $data['title'] = "";

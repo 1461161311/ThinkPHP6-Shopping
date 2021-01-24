@@ -3,7 +3,7 @@
 namespace app\admin\controller;
 
 use think\facade\View;
-use app\common\business\CategoryBus;
+use app\common\business\Category as CategoryBus;
 use app\admin\validate\Category as CategoryValidate;
 use app\common\lib\Status as StatusLib;
 
@@ -104,10 +104,21 @@ class Category extends AdminBase
         if (!$validate->scene('category')->check($data)) {
             return show(config("status.error"), $validate->getError());
         }
+        // 实例化 business
+        $categoryObj = (new CategoryBus());
+
+        // 填充 path 字段。方便查询父级分类
+        $res = $categoryObj->getTree($data['pid']);
+        $pid = [];
+        foreach ($res as $value) {
+            $pid = array_column($value,"id"); // array_column(): 获取数组中某一字段，返回数组
+        }
+        // 将父级分类 id 存放到 path 字段中
+        $data['path'] =implode(",",$pid);   // implode(): 将数组转换成字符串
 
         // 调用 business 添加方法
         try {
-            $result = (new CategoryBus())->add($data);
+            $result = $categoryObj->add($data);
         } catch (\Exception $exception) {
             return show(config("status.error"), $exception->getMessage());
         }
@@ -262,10 +273,21 @@ class Category extends AdminBase
         if (!$validate->scene('update')->check($data)) {
             return show(config("status.error"), $validate->getError());
         }
+        $categoryObj = (new CategoryBus());
+
+
+        // 填充 path 字段。方便查询父级分类
+        $res = $categoryObj->getTree($data['pid']);
+        $pid = [];
+        foreach ($res as $value) {
+            $pid = array_column($value,"id"); // array_column(): 获取数组中某一字段，返回数组
+        }
+        // 将父级分类 id 存放到 path 字段中
+        $data['path'] =implode(",",$pid);   // implode(): 将数组转换成字符串
 
         // 调用 business 层方法
         try {
-            $result = (new CategoryBus())->updateCategory($id, $data);
+            $result = $categoryObj->updateCategory($id, $data);
         } catch (\Exception $exception) {
             return show(config("status.error"), $exception->getMessage());
         }

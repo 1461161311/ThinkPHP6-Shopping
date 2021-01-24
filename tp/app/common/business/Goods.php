@@ -4,6 +4,7 @@ namespace app\common\business;
 
 use app\common\model\mysql\Goods as GoodsModel;
 use app\common\business\GoodsSku as GoodsSkuBus;
+use app\common\model\mysql\Category as CategoryModel;
 use think\Exception;
 
 class Goods extends BaseBusiness
@@ -22,7 +23,7 @@ class Goods extends BaseBusiness
 
     /**
      * 添加商品并添加 sku
-     * @param $data
+     * @param $data     // 添加商品的信息
      * @return bool|mixed
      */
     public function insertData($data)
@@ -78,7 +79,7 @@ class Goods extends BaseBusiness
             return true;
 
         } catch (\Exception $exception) {
-            // 事务回滚
+            // 如果提交失败,事务回滚
             $this->model->rollback();
             show(config("status.error"), $exception->getMessage());
             return false;
@@ -89,20 +90,29 @@ class Goods extends BaseBusiness
 
     /**
      * 商品列表
-     * @param $num
-     * @return array
+     * @param $data // 模糊查询条件
+     * @param $num  // 分页显示数量
+     * @param $field    // 查询字段
+     * @param $order    // 排序方式
+     * @return array    // 返回数组
      */
-    public function getLists($data,$num)
+    public function getLists($data, $order, $num, $field)
     {
         // 判断是否传入参数使用搜索功能
         $likeKeys = [];
-        if (!empty($data)){
+        if (!empty($data)) {
             $likeKeys = array_keys($data);
+        }
+
+        // 判断是否传入查询字段参数
+        $fieldModel = null;
+        if (!empty($field)) {
+            $fieldModel[] = $field;
         }
 
         // 调用 model 层分页查询方法
         try {
-            $list = $this->model->getLists($likeKeys,$data,$num);
+            $list = $this->model->getLists($likeKeys, $data,$order, $num, $fieldModel);
         } catch (\Exception $exception) {
             // 当分页方法出现异常时，调用默认返回数据
             return \app\common\lib\Arr::getPaginateDefaultData(3);
@@ -118,8 +128,8 @@ class Goods extends BaseBusiness
 
     /**
      * 修改商品是否首页推荐
-     * @param $id
-     * @param $data
+     * @param $id   // 商品 id
+     * @param $data // 商品修改的信息
      * @return bool
      * @throws Exception
      * @throws \think\db\exception\DataNotFoundException
@@ -128,30 +138,25 @@ class Goods extends BaseBusiness
      */
     public function isIndex($id, $data)
     {
-        // 验证 id 是否正确
         $result = $this->getById($id);
         if (!$result) {
             throw new Exception("不存在该条记录");
         }
 
-        // 修改前后不得相同
         if ($result['is_index_recommend'] == $data) {
             throw new Exception("状态修改前和修改后一致");
         }
 
-        // 组装数据
         $data = [
             "is_index_recommend" => intval($data),
         ];
 
-        // 调用 model 层方法修改属性
         try {
             $result = $this->model->updateById($id, $data);
         } catch (\Exception $exception) {
             return false;
         }
 
-        // 返回查询的数据
         return $result;
     }
 
@@ -168,7 +173,7 @@ class Goods extends BaseBusiness
      */
     public function saveUpdate($id, $data)
     {
-        // 查询 id 是否正确
+        // 验证 id
         $result = $this->getById($id);
         if (!$result) {
             throw new Exception("不存在该条记录");
@@ -182,6 +187,103 @@ class Goods extends BaseBusiness
         }
 
         return $result;
+    }
+
+
+    /**
+     * 查询首页推荐的商品
+     * @return array
+     */
+    public function getRotationChart()
+    {
+        $data = [
+            "is_index_recommend" => 1,  // 是否推荐字段 (0:不推荐,1:推荐)
+        ];
+
+        // 查询字段
+        $field = "sku_id as id , title , big_image as image";
+
+        try {
+            $result = $this->model->getNormalGoodsByCondition($data, $field);
+        } catch (\Exception $exception) {
+            return [];
+        }
+
+        return $result->toArray();
+    }
+
+
+    /**
+     * 传入多个分类 id ,查询该分类下的商品
+     * @param $categoryIds
+     * @param $field
+     * @return array
+     */
+    public function categoryGoodsRecommend($categoryIds, $field)
+    {
+        if (!$categoryIds) {
+            return [];
+        }
+        $result = [];
+        // 将分类数据写入返回数据
+        foreach ($categoryIds as $key => $categoryId) {
+            $category = (new CategoryModel())->getById($categoryId);
+            $category = $category->toArray();
+            $json = [
+                "category_id" => $category['id'],
+                "name" => $category['name'],
+                "icon" => "",
+            ];
+            $result[$key]["categorys"] = $json;
+        }
+
+        // 将商品数据写入返回数据
+        foreach ($categoryIds as $key => $categoryId) {
+            $result[$key]["goods"] = $this->getNormalGoodsFindInSetCategoryId($categoryId, $field);
+        }
+        return $result;
+    }
+
+
+    /**
+     * 传入分类 id ,查询商品 path 字段
+     * @param $categoryId
+     * @param $field
+     * @return array
+     */
+    public function getNormalGoodsFindInSetCategoryId($categoryId, $field)
+    {
+        try {
+            $result = $this->model->getNormalGoodsFindInSetCategoryId($categoryId, $field);
+        } catch (\Exception $exception) {
+            return [];
+        }
+        return $result->toArray();
+    }
+
+
+    /**
+     * 传入分类 id ,查询商品 category_id
+     * @param $categoryId
+     * @param $field
+     * @param $limit
+     * @param $order
+     * @return array
+     */
+    public function getByCategoryId($categoryId, $field, $limit, $order)
+    {
+        $where = [
+            "category_id" => $categoryId,
+        ];
+        try {
+            $list = $this->model->getByCategoryId($field, $where, $limit, $order);
+        } catch (\Exception $exception) {
+            return [];
+        }
+
+        $list = $list->toArray();
+
+        return $list;
     }
 
 }

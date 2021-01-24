@@ -13,6 +13,11 @@ class BaseModel extends Model
     protected $autoWriteTimestamp = true;
 
 
+    public function getById($id)
+    {
+        return $this->find($id);
+    }
+
 
     /**
      * 更新数据

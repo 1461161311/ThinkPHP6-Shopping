@@ -14,10 +14,10 @@ class BaseBusiness
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function getById($id)
+    public function getById($id,$field = true)
     {
         try {
-            $result = $this->model->find($id);
+            $result = $this->model->field($field)->find($id);
         } catch (\Exception $exception) {
             throw new \think\Exception("status.error", $exception->getMessage());
         }
