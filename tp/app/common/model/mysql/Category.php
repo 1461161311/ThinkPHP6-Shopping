@@ -8,7 +8,7 @@ class Category extends BaseModel
 {
     /**
      * 根据分类名查询数据库
-     * @param $name
+     * @param $name // 分类名
      * @return array|bool|Model|null
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
@@ -29,7 +29,7 @@ class Category extends BaseModel
 
     /**
      * 查询所有分类，默认获取所有属性
-     * @param string $field
+     * @param string $field // 查询条件
      * @return \think\Collection
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
@@ -54,8 +54,8 @@ class Category extends BaseModel
 
     /**
      * 分页查询分类（默认每页十条数据）
-     * @param $where
-     * @param int $num
+     * @param $where    // 查询条件
+     * @param int $num  // 每页显示数量，默认10
      * @return \think\Paginator
      * @throws \think\db\exception\DbException
      */
@@ -68,7 +68,6 @@ class Category extends BaseModel
         ];
 
         // <> 表示不等，
-        // 第一个 where ：数据状态码不能为删除状态。
         // 第二个 where ：当传入 pid 查询子分类时使用
         // paginate() 框架自带方法，自动分页。传入每页显示多少数据的变量
         return $this->where("status", "<>", config("status.mysql.table_delete"))
@@ -80,7 +79,7 @@ class Category extends BaseModel
 
     /**
      * 查询父分类有多少个子分类
-     * @param $condition
+     * @param $condition    // 传入包含 pid 的数组
      * @return mixed
      */
     public function getChildCountInPids($condition)
@@ -98,8 +97,8 @@ class Category extends BaseModel
 
 
     /**
-     * 使用递归查询分类有多少父类。适用于面包屑功能
-     * @param $id
+     * 使用递归查询分类有多少父类
+     * @param $id   // 要查询的分类 id
      * @return array
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
@@ -129,9 +128,9 @@ class Category extends BaseModel
     }
 
     /**
-     * 查询数据库
-     * @param $pid
-     * @param $field
+     * 根据 pid 查询数据库
+     * @param $pid  // 要查询的 pid
+     * @param $field    // 要查询的字段
      * @return \think\Collection
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
@@ -156,6 +155,9 @@ class Category extends BaseModel
             ->order($order)
             ->select();
     }
+
+
+
 
 
 }

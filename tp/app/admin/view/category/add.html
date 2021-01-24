@@ -92,7 +92,8 @@
                 success(res) {
                     if (res.status == 1) {
                         layer.msg("新增成功", function () {
-                            window.location = "{:url('index')}";
+                            window.parent.location.reload();
+                            parent.layer.closeAll('index');
                         });
                     } else {
                         layer.msg(res.message)

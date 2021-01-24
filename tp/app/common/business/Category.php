@@ -5,7 +5,7 @@ namespace app\common\business;
 use app\common\model\mysql\Category as CategoryModel;
 use think\Exception;
 
-class CategoryBus extends BaseBusiness
+class Category extends BaseBusiness
 {
     public $model = null;
 
@@ -168,8 +168,8 @@ class CategoryBus extends BaseBusiness
 
     /**
      * 编辑分类
-     * @param $id
-     * @param $data
+     * @param $id   // 要修改的分类 id
+     * @param $data // 修改内容
      * @return bool
      * @throws Exception
      * @throws \think\db\exception\DataNotFoundException
@@ -183,13 +183,14 @@ class CategoryBus extends BaseBusiness
             throw new \think\Exception("不存在该条记录");
         }
 
-        if ($data['pid'] == $result['pid'] && $data['name'] == $result['name']) {
+        if ($data['pid'] == $result['pid'] && $data['name'] == $result['name'] && $data['path'] == $result['path']) {
             throw new \think\Exception("状态修改前和修改后一致");
         }
 
         $data = [
             'pid' => intval($data['pid']),
             'name' => $data['name'],
+            'path' => $data['path'],
         ];
 
         try {
@@ -201,8 +202,8 @@ class CategoryBus extends BaseBusiness
     }
 
     /**
-     * 面包屑功能
-     * @param $id
+     * 递归查询分类父类
+     * @param $id   // 传入要查询的分类 id
      * @return array
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
@@ -210,7 +211,7 @@ class CategoryBus extends BaseBusiness
      */
     public function getTree($id)
     {
-        // 查询数据库
+        // 调用 model 方法查询数据库
         try {
             $res = $this->model->getTree($id);
         } catch (\Exception $exception) {
@@ -233,16 +234,16 @@ class CategoryBus extends BaseBusiness
 
 
     /**
-     * 查询分类数据库，默认返回 id，name，pid 三个字段
-     * @param int $pid  // 可选参数。默认为0
+     * 根据 pid 查询分类数据库，默认返回 id，name，pid 三个字段
+     * @param int $pid // 可选参数。默认为0
      * @param string $field
      * @return array
      */
     public function getNormalByPid($pid = 0, $field = "id,name,pid")
     {
-        try{
-            $result = $this->model->getNormalByPid($pid,$field);
-        }catch(\Exception $exception){
+        try {
+            $result = $this->model->getNormalByPid($pid, $field);
+        } catch (\Exception $exception) {
             return [];
         }
 
