@@ -4,8 +4,10 @@ namespace app\common\business;
 
 use app\common\model\mysql\Goods as GoodsModel;
 use app\common\business\GoodsSku as GoodsSkuBus;
+use app\common\business\SpecsValue as SpecsValueBus;
 use app\common\model\mysql\Category as CategoryModel;
 use think\Exception;
+use think\facade\Cache;
 
 class Goods extends BaseBusiness
 {
@@ -23,7 +25,7 @@ class Goods extends BaseBusiness
 
     /**
      * 添加商品并添加 sku
-     * @param $data     // 添加商品的信息
+     * @param $data // 添加商品的信息
      * @return bool|mixed
      */
     public function insertData($data)
@@ -91,9 +93,9 @@ class Goods extends BaseBusiness
     /**
      * 商品列表
      * @param $data // 模糊查询条件
-     * @param $num  // 分页显示数量
-     * @param $field    // 查询字段
-     * @param $order    // 排序方式
+     * @param $num // 分页显示数量
+     * @param $field // 查询字段
+     * @param $order // 排序方式
      * @return array    // 返回数组
      */
     public function getLists($data, $order, $num, $field)
@@ -112,7 +114,7 @@ class Goods extends BaseBusiness
 
         // 调用 model 层分页查询方法
         try {
-            $list = $this->model->getLists($likeKeys, $data,$order, $num, $fieldModel);
+            $list = $this->model->getLists($likeKeys, $data, $order, $num, $fieldModel);
         } catch (\Exception $exception) {
             // 当分页方法出现异常时，调用默认返回数据
             return \app\common\lib\Arr::getPaginateDefaultData(3);
@@ -128,7 +130,7 @@ class Goods extends BaseBusiness
 
     /**
      * 修改商品是否首页推荐
-     * @param $id   // 商品 id
+     * @param $id // 商品 id
      * @param $data // 商品修改的信息
      * @return bool
      * @throws Exception
@@ -263,7 +265,7 @@ class Goods extends BaseBusiness
 
 
     /**
-     * 传入分类 id ,查询商品 category_id
+     * 根据传入的分类 id ,查询商品 category_id 字段
      * @param $categoryId
      * @param $field
      * @param $limit
@@ -284,6 +286,83 @@ class Goods extends BaseBusiness
         $list = $list->toArray();
 
         return $list;
+    }
+
+
+    /**
+     * 根据商品 sku_id 获取商品信息
+     * @param $skuId // 商品 sku_id
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getGoodsDetailBySkuId($skuId)
+    {
+        $goodsSkuObj = new GoodsSkuBus();
+        // 根据 sku_id 查询该 sku 数据以及该 sku 数据下的商品数据
+        $goodsSku = $goodsSkuObj->getNormalSkuAndGoods($skuId);
+
+        if (!$goodsSku) {
+            return [];
+        }
+        // 验证该 sku 下是否获取到商品信息
+        if (empty($goodsSku['goods'])) {
+            return [];
+        }
+        // 商品信息
+        $goods = $goodsSku['goods'];
+
+        // 根据商品 id 查询所属的 sku
+        $skus = $goodsSkuObj->getSkusByGoodsId($goods['id']);
+
+        if (!$skus) {
+            return [];
+        }
+
+        // 查询所点击的商品的 specs_value_ids 字段,用于在页面中显示当前所选择的 sku 数据
+        $flagValue = "";
+        foreach ($skus as $v) {
+            if ($v['id'] == $skuId) {   // 查询所点击的商品的 specs_value_ids 字段
+                $flagValue = $v['specs_value_ids'];
+            }
+        }
+
+        // 处理数据,获取该商品所有 sku 组合所对应的 sku 数据的 id,返回给前端使用 gids 字段
+        $gids = array_column($skus, "id", "specs_value_ids");
+
+        // 判断商品是否是多规格
+        if ($goods['goods_specs_type'] == 1) {
+            $sku = [];  // 当是统一规格时,sku数据设置为空
+        } else {
+            // 当商品时多规格时,传入该商品所对应的所有sku的数据
+            $sku = (new SpecsValueBus())->dealGoodsSkus($gids, $flagValue);
+        }
+
+        // 返回数据
+        $result = [
+            "title" => $goods['title'], // 商品标题
+            "price" => $goodsSku['price'],  // 商品该 sku 现价
+            "cost_price" => $goodsSku['cost_price'],    // 商品该 sku 原价
+            "sales_count" => 0, // 销售额
+            "stock" => $goodsSku['stock'],  // 商品该 sku 库存
+            "gids" => $gids,    // specs_value_ids 所对应的 sku 表中的 id
+            "image" => $goods['carousel_image'],    // 商品轮播图
+            "sku" => $sku,  // 商品 sku 数据
+            "detail" => [   // 商品详情
+                "d1" => [
+                    "商品编码" => $goodsSku['id'],
+                    "上架时间" => $goods['create_time'],
+                ],
+                // 处理商品详情中的图片路径
+                // preg_replace():执行正则表达式
+                "d2" => preg_replace('/(<img.+?src=")(.*?)/', '$1' . "http://localhost:81" . "$2", $goods['description']),
+            ],
+        ];
+
+        // 记录数据到 redis 中,作为商品 pv 统计
+        Cache::inc("mall_pv_" . $goods['id']);
+        return $result;
     }
 
 }

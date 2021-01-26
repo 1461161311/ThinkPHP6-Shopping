@@ -76,13 +76,30 @@ class Goods extends BaseModel
 
     /**
      * 自动运行方法
-     * 前端运行轮播图时,调用该方法修改图片路径
+     * 前端首页运行轮播图时,调用该方法修改图片路径
      * @param $value
      * @return string
      */
     public function getImageAttr($value)
     {
         return "http://localhost:81" . $value;
+    }
+
+    /**
+     * 自动运行方法
+     * 商品页处理轮播图路径
+     * @param $value
+     * @return string[]
+     */
+    public function getCarouselImageAttr($value)
+    {
+        if (!empty($value)) {
+            $value = explode(",", $value);  // explode():按照指定方法分割字符串
+            $value = array_map(function ($v) {   //array_map():将函数作用到数组中每一个值上
+                return "http://localhost:81" . $v;
+            }, $value);
+        }
+        return $value;
     }
 
 
@@ -114,10 +131,10 @@ class Goods extends BaseModel
 
     /**
      * 根据条件查询商品
-     * @param $field    // 查询字段
-     * @param $where    // 查询条件
-     * @param $limit    // 分页显示数量
-     * @param $order    // 排序方式
+     * @param $field // 查询字段
+     * @param $where // 查询条件
+     * @param $limit // 分页显示数量
+     * @param $order // 排序方式
      * @return \think\Paginator
      * @throws \think\db\exception\DbException
      */
