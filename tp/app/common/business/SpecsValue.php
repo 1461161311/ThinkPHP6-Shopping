@@ -2,11 +2,13 @@
 
 namespace app\common\business;
 
+use app\common\business\Specs as SpecsBus;
 use think\Exception;
 
 class SpecsValue extends BaseBusiness
 {
     public $model = null;
+
     /**
      * 构造函数，自动 new Model 类对象
      * CategoryBus constructor.
@@ -64,6 +66,104 @@ class SpecsValue extends BaseBusiness
 
         // 返回添加数据的 id
         return $this->model->id;
+    }
+
+
+    /**
+     * 获取商品所有的 sku 数据
+     * @param $gids // specs_value_ids对应 sku 的 id 的数组
+     * @param $flagValue    // specs_value_ids 字段
+     * @return array
+     */
+    public function dealGoodsSkus($gids,$flagValue)
+    {
+        // 取出 $gids 中的 key 值组成数组
+        $specsValueKeys = array_keys($gids);
+
+        $specsValueKey = [];
+        $new = [];
+        $specsValueIds = [];
+        foreach ($specsValueKeys as $value) {
+            $specsValueKey = explode(",", $value);  // explode():按照指定条件分割字符串
+            foreach ($specsValueKey as $key => $v) {
+                $new[$key][] = $v;
+                $specsValueIds[] = $v;
+            }
+        }
+
+        // 参数去重
+        $specsValueIds = array_unique($specsValueIds);  // array_unique():去除重复的数据
+
+        // 获取商品的所有 sku 数据的规格名
+        $specsValues = $this->getNormalInIds($specsValueIds);
+
+        // 拼接前端所需 list 数据
+        $flagValue = explode(",",$flagValue);   // explode():按照指定条件分割字符串
+        $result = [];
+        foreach ($new as $key => $value) {
+            $newValue = array_unique($value);   // array_unique(): 去除数组中重复的数据
+            $list = [];
+            foreach ($newValue as $v) {
+                $list[] = [
+                    "id" => $v, // sku_id
+                    "name" => $specsValues[$v]['name'], // sku 规格名
+                    // in_array():在 $flagValue 中搜索 sku 的 id , 显示该商品目前所选规格
+                    "flag" => in_array($v,$flagValue) ? 1 : 0,
+                ];
+            }
+
+            // 拼装数据
+            $result[$key] = [
+                // 该商品所有的规格名
+                "name" => $specsValues[$newValue[0]]['specs_name'],
+                "list" => $list,
+            ];
+        }
+        return $result;
+    }
+
+
+    /**
+     * 将数据拼接成 sku_id [sku_name => S , specs_name => 尺寸] 格式
+     * @param $ids  // 传入商品的所有 sku_id
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getNormalInIds($ids)
+    {
+        if (!$ids) {
+            return [];
+        }
+        // 根据商品的 sku 表中的 specs_value_ids 字段查询所属规格
+        try {
+            $result = $this->model->getNormalInIds($ids);
+        } catch (\Exception $exception) {
+            return [];
+        }
+        $result = $result->toArray();
+
+        if (!$result) {
+            return [];
+        }
+        // 查询所有规格名
+        $specsNames = (new SpecsBus())->getNormalSpecs();
+        if (!$specsNames) {
+            return [];
+        }
+        // 处理数据,将规格转换成 id => name 的格式
+        $specsNamesArrs = array_column($specsNames, "name", "id");
+
+        // 将数据拼接成 sku_id [sku_name => S , specs_name => 尺寸] 格式
+        $res = [];
+        foreach ($result as $value) {
+            $res[$value['id']] = [
+                'name' => $value['name'],
+                'specs_name' => $specsNamesArrs[$value['specs_id']] ?? "",
+            ];
+        }
+        return $res;
     }
 
 }

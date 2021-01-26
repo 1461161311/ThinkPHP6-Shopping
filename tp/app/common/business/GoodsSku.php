@@ -82,4 +82,49 @@ class GoodsSku extends BaseBusiness
         return $result->toArray();
     }
 
+
+    /**
+     * 一对一关联查询,根据 sku 的 id,查询 sku 信息以及相关的商品信息
+     * @param $id
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getNormalSkuAndGoods($id)
+    {
+        try {
+            // with(): 调用关联查询(使用两条sql语句查询)
+            $result = $this->model->with("goods")->find($id);
+        } catch (\Exception $exception) {
+            return [];
+        }
+        $result = $result->toArray();
+        if ($result['status'] != config("status.mysql.table_normal")) {
+            return [];
+        }
+        return $result;
+    }
+
+
+    /**
+     * 根据商品 id 查询所属的 sku
+     * @param int $goodsId
+     * @return array
+     */
+    public function getSkusByGoodsId($goodsId = 0)
+    {
+        if (!$goodsId) {
+            return [];
+        }
+        try {
+            // 根据商品 id 查询所属的 sku
+            $skus = $this->model->getNormalByGoodsId($goodsId);
+        } catch (\Exception $exception) {
+            return [];
+        }
+
+        return $skus->toArray();
+    }
+
 }

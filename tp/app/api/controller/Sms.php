@@ -5,6 +5,7 @@ namespace app\api\controller;
 
 use app\BaseController;
 use app\common\business\Sms as SmsBusiness;
+use think\facade\Log;
 
 class Sms extends BaseController
 {

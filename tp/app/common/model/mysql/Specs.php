@@ -8,12 +8,13 @@ class Specs extends BaseModel
 {
     /**
      * 获取规格数据
+     * @param string $field
      * @return \think\Collection
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function getNormalSpecs($field)
+    public function getNormalSpecs($field = "*")
     {
         $where = [
             "status" => config("status.mysql.table_normal")

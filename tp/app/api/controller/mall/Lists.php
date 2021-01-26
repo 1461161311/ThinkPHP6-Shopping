@@ -25,7 +25,7 @@ class Lists extends ApiBase
         $goodsObj = new GoodsBus();
 
         // 默认要查询的字段
-        $field = "id,title,price,recommend_image as image";
+        $field = "sku_id as id,title,price,recommend_image as image";
 
         // 默认的排序方式
         $order = [

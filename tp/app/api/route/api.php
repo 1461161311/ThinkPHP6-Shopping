@@ -6,5 +6,4 @@ Route::rule("smscode","sms/code","POST");
 Route::resource('user','User');
 Route::rule("lists","mall.lists/index");
 Route::rule("subcategory/:id","category/sub");
-//Route::rule("category/:cid","category/search");
-
+Route::rule("detail/:id","mall.detail/index");
