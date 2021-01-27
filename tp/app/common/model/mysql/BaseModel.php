@@ -35,4 +35,19 @@ class BaseModel extends Model
         return $this->where($where)->save($data);
     }
 
+    /**
+     * 根据传入的 ids 查询规格值
+     * @param $ids // 传入要查询的 id ,需要为数组
+     * @return \think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getNormalInIds($ids)
+    {
+        return $this->whereIn("id", $ids)
+            ->where("status", "=", config("status.mysql.table_normal"))
+            ->select();
+    }
+
 }

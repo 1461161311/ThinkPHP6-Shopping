@@ -72,10 +72,10 @@ class SpecsValue extends BaseBusiness
     /**
      * 获取商品所有的 sku 数据
      * @param $gids // specs_value_ids对应 sku 的 id 的数组
-     * @param $flagValue    // specs_value_ids 字段
+     * @param $flagValue // specs_value_ids 字段
      * @return array
      */
-    public function dealGoodsSkus($gids,$flagValue)
+    public function dealGoodsSkus($gids, $flagValue)
     {
         // 取出 $gids 中的 key 值组成数组
         $specsValueKeys = array_keys($gids);
@@ -98,7 +98,7 @@ class SpecsValue extends BaseBusiness
         $specsValues = $this->getNormalInIds($specsValueIds);
 
         // 拼接前端所需 list 数据
-        $flagValue = explode(",",$flagValue);   // explode():按照指定条件分割字符串
+        $flagValue = explode(",", $flagValue);   // explode():按照指定条件分割字符串
         $result = [];
         foreach ($new as $key => $value) {
             $newValue = array_unique($value);   // array_unique(): 去除数组中重复的数据
@@ -108,7 +108,7 @@ class SpecsValue extends BaseBusiness
                     "id" => $v, // sku_id
                     "name" => $specsValues[$v]['name'], // sku 规格名
                     // in_array():在 $flagValue 中搜索 sku 的 id , 显示该商品目前所选规格
-                    "flag" => in_array($v,$flagValue) ? 1 : 0,
+                    "flag" => in_array($v, $flagValue) ? 1 : 0,
                 ];
             }
 
@@ -125,7 +125,7 @@ class SpecsValue extends BaseBusiness
 
     /**
      * 将数据拼接成 sku_id [sku_name => S , specs_name => 尺寸] 格式
-     * @param $ids  // 传入商品的所有 sku_id
+     * @param $ids // 传入商品的所有 sku_id
      * @return array
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
@@ -163,6 +163,42 @@ class SpecsValue extends BaseBusiness
                 'specs_name' => $specsNamesArrs[$value['specs_id']] ?? "",
             ];
         }
+        return $res;
+    }
+
+
+    /**
+     * 转换成 [ 规格名:规格属性 ]  [ 颜色:红色 ]  的形式
+     * @param $skuIdSpecsValueIds   // 传入规格 ids
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function dealSpecsValue($skuIdSpecsValueIds)
+    {
+        // 整理数据
+        $ids = array_values($skuIdSpecsValueIds);   // array_values(): 取数组value值
+        $ids = implode(",", $ids);   // implode(): 将数组转换成字符串
+        $ids = array_unique(explode(",", $ids));    // explode():字符串转数组,array_unique():数组去重
+
+        // 拼接数据,取得规格 id 对应的规格名
+        $result = $this->getNormalInIds($ids);
+        if (!$result) {
+            return [];
+        }
+
+        $res = [];
+        // 拼装数据,转换成   [ 颜色:红色  大小:L ]    形式
+        foreach ($skuIdSpecsValueIds as $key => $value) {
+            $value = explode(",", $value);
+            $skuStr = [];
+            foreach ($value as $v) {
+                $skuStr[] = $result[$v]['specs_name'] . ":" . $result[$v]['name'];
+            }
+            $res[$key] = implode("  ", $skuStr);
+        }
+
         return $res;
     }
 

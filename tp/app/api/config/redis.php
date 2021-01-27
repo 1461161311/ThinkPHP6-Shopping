@@ -6,6 +6,9 @@ return [
     "code_expire" => 60,
 
     // token 前缀
-    "token_pre" => "mall_token_pre_"
+    "token_pre" => "mall_token_pre_",
+
+    // 购物车前缀
+    "cart_pre" => "mall_cart_",
 ];
 
