@@ -127,4 +127,20 @@ class GoodsSku extends BaseBusiness
         return $skus->toArray();
     }
 
+
+    /**
+     * 根据规格 ids 查询规格属性
+     * @param $ids
+     * @return array
+     */
+    public function getNormalInIds($ids)
+    {
+        try {
+            $result = $this->model->getNormalInIds($ids);
+        } catch (\Exception $exception) {
+            return [];
+        }
+        return $result->toArray();
+    }
+
 }
