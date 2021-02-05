@@ -50,4 +50,50 @@ class BaseModel extends Model
             ->select();
     }
 
+
+    /**
+     * 根据指定条件查询数据
+     * @param array $condition
+     * @param string[] $order
+     * @param string $field
+     * @return bool|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getByCondition($condition = [], $order = ["id" => "desc"],$field = "*")
+    {
+        if (!$condition || !is_array($condition)) {
+            return false;
+        }
+
+        return $this->where($condition)->order($order)->field($field)->select();
+    }
+
+    /**
+     * 商品减库存
+     * @param $id   // 商品 sku id
+     * @param $num  // 需要减少的数量
+     * @return mixed
+     */
+    public function decStock($id,$num)
+    {
+        return $this->where("id","=",$id)
+            ->dec("stock",$num)
+            ->update();
+    }
+
+    /**
+     * 商品加库存
+     * @param $id   // 商品 sku id
+     * @param $num  // 需要减少的数量
+     * @return mixed
+     */
+    public function incStock($id,$num)
+    {
+        return $this->where("id","=",$id)
+            ->inc("stock",$num)
+            ->update();
+    }
+
 }

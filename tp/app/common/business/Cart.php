@@ -9,9 +9,9 @@ class Cart extends BaseBusiness
 {
     /**
      * 添加购物车
-     * @param $userId   // 用户 id
-     * @param $id   // 商品 sku id
-     * @param $num  // 商品数量
+     * @param $userId // 用户 id
+     * @param $id // 商品 sku id
+     * @param $num // 商品数量
      * @return bool
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
@@ -40,6 +40,9 @@ class Cart extends BaseBusiness
             if ($get) {     // 当添加同一个商品时,仅增加数量
                 $get = json_decode($get, true); // json_decode() 将json数组转成字符串
                 $data['num'] = $data['num'] + $get['num'];  // 添加的商品数量 + 原有商品数量
+                if ($data['num'] > $goodsSku['stock']) {
+                    throw new Exception("库存不足，无法添加");
+                }
             }
             // hSet() 添加 redis 数据
             $res = Cache::hSet(config("redis.cart_pre") . $userId, $id, json_encode($data));
@@ -52,14 +55,29 @@ class Cart extends BaseBusiness
 
     /**
      * 购物车列表
-     * @param $userId
+     * @param $userId // 用户 id
+     * @param $ids // 商品 sku 的 id
      * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
      */
-    public function lists($userId)
+    public function lists($userId, $ids)
     {
         try {
-            // hGetAll() 根据 hash 值获取该值下所有数据
-            $res = Cache::hGetAll(config("redis.cart_pre") . $userId);
+            if ($ids) {
+
+                $ids = explode(",", $ids);
+
+                // hMget() 根据指定名称和 key 值获取数据
+                $res = Cache::hMget(config("redis.cart_pre") . $userId, $ids);
+                if (in_array(false, array_values($res))) {    // 判断获取结果是否为 false
+                    return [];
+                }
+            } else {
+                // hGetAll() 根据 hash 值获取该值下所有数据
+                $res = Cache::hGetAll(config("redis.cart_pre") . $userId);
+            }
         } catch (\Exception $exception) {
             $res = [];
         }
@@ -67,11 +85,14 @@ class Cart extends BaseBusiness
             return [];
         }
 
+
         // 将获取到的购物车数据的 key 值取出
         $skuIds = array_keys($res);
 
         // 查询商品规格 id 所对应的规格名
         $skus = (new GoodsSku())->getNormalInIds($skuIds);
+        // 处理数据, id => 库存
+        $stocks = array_column($skus, "price", "id");
         // array_column(): 转换成 id => price 格式数组
         $skuIdsPrice = array_column($skus, "price", "id");
         $result = [];
@@ -83,11 +104,17 @@ class Cart extends BaseBusiness
 
         // 拼接数据
         foreach ($res as $key => $value) {
+            $price = $skuIdsPrice[$key] ?? 0;
             $value = json_decode($value, true); // json_decode(): json 数组转字符串
+            // 验证库存
+            if ($ids && isset($stocks[$key]) && isset($stocks[$key]) < $value['num']) {
+                throw new Exception($value['id'] . "该商品库存不足");
+            }
             $value['id'] = $key;    // 商品 sku 的 id
             // preg_match(): 执行正则  判断图片路径是否正确
             $value['image'] = preg_match("/http:\/\//", $value['image']) ? $value['image'] : "http://localhost:81" . $value['image'];
-            $value['price'] = $skuIdsPrice[$key] ?? 0;  // 商品价格
+            $value['price'] = $price;  // 商品价格
+            $value['total_price'] = $price * $value['num']; // 当前商品的总价
             $value['sku'] = $specsValues[$key] ?? "暂无规格";   // 商品规格
             $result[] = $value;
         }
@@ -103,15 +130,18 @@ class Cart extends BaseBusiness
 
     /**
      * 删除购物车
-     * @param $userId   // 用户 id
-     * @param $id   // 要删除的商品 sku 的 id
+     * @param $userId
+     * @param $ids
      * @return bool
      */
-    public function delete($userId, $id)
+    public function delete($userId, $ids)
     {
+        if (!is_array($ids)){
+            $ids = explode(",",$ids);
+        }
         try {
             // 删除指定 key 值
-            $result = Cache::hDel(config("redis.cart_pre") . $userId, $id);
+            $result = Cache::hDel(config("redis.cart_pre") . $userId, ...$ids);
         } catch (\Exception $exception) {
             return FALSE;
         }
@@ -122,14 +152,19 @@ class Cart extends BaseBusiness
 
     /**
      * 购物车编辑
-     * @param $userId   // 用户 id
-     * @param $id   // 要编辑的商品 sku 的 id
-     * @param $num  // 要修改的商品数量
+     * @param $userId // 用户 id
+     * @param $id // 要编辑的商品 sku 的 id
+     * @param $num // 要修改的商品数量
      * @return bool
      * @throws Exception
      */
     public function update($userId, $id, $num)
     {
+        // 根据 sku id 查询 sku 信息及商品信息
+        $goodsSku = (new GoodsSku())->getNormalSkuAndGoods($id);
+        if (!$goodsSku) {
+            return FALSE;
+        }
         try {
             // 获取要修改的商品 redis 数据
             $res = Cache::hGet(config("redis.cart_pre") . $userId, $id);
@@ -142,10 +177,12 @@ class Cart extends BaseBusiness
             // 修改其数量
             $res = json_decode($res, true);
             $res['num'] = $num;
+            if ($res['num'] > $goodsSku['stock']) {
+                throw new Exception("库存不足");
+            }
         } else {
             throw new Exception("不存在该购物车");
         }
-
         try {
             // 保存修改的购物车数据
             $result = Cache::hSet(config("redis.cart_pre") . $userId, $id, json_encode($res));
@@ -159,7 +196,7 @@ class Cart extends BaseBusiness
 
     /**
      * 获取购物车中的商品数量
-     * @param $userId   // 用户 id
+     * @param $userId // 用户 id
      * @return int
      */
     public function getCount($userId)

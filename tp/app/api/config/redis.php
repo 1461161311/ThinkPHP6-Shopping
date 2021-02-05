@@ -10,5 +10,12 @@ return [
 
     // 购物车前缀
     "cart_pre" => "mall_cart_",
+
+    // 延迟队列 - 订单是否需要取消状态检查
+    "order_status_key" => "order_status",
+
+    // 订单失效时间 (20分钟)
+    "order_expire" => 20 * 60,
+
 ];
 

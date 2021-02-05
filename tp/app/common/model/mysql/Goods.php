@@ -146,5 +146,4 @@ class Goods extends BaseModel
             ->paginate($limit);
     }
 
-
 }

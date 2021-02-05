@@ -15,7 +15,7 @@ class AuthBase extends ApiBase
     public $userId = 0;
     public $username = "";
     public $accessToken = "";
-    public $isLogin = 0;
+    public $isLogin = 3;
 
     /**
      * tp6中的构造方法，类似于 __construct 构造方法，区别在于此方法可以自动调用父类 initialize 方法
