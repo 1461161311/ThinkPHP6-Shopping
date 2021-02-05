@@ -39,7 +39,11 @@ class Cart extends AuthBase
         }
 
         // 调用 business 添加购物车方法
-        $res = (new CartBus)->insertRedis($this->userId, $id, $num);
+        try {
+            $res = (new CartBus)->insertRedis($this->userId, $id, $num);
+        } catch (\Exception $exception) {
+            return show(config("status.error"), $exception->getMessage());
+        }
 
         // 判断结果
         if ($res === FALSE) {
@@ -52,10 +56,16 @@ class Cart extends AuthBase
     /**
      * 购物车列表
      * @return \think\response\Json
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
      */
     public function lists()
     {
-        $result = (new CartBus())->lists($this->userId);
+        $ids = input("param.id", "", "trim");
+
+        $result = (new CartBus())->lists($this->userId, $ids);
+
         if ($result === FALSE) {
             return show(config("status.error"), "获取购物车失败");
         }
