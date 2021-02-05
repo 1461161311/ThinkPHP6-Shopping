@@ -20,7 +20,14 @@ class Order extends Command
 
     protected function execute(Input $input, Output $output)
     {
+        $obj = new \app\common\business\Order();
+        // 无限循环
+        while(true){
+            $obj->checkOrderStatus();
+            sleep(1);   // 每隔 1 秒循环一次
+        }
+
         // 指令输出
-        $output->writeln('order');
+        $output->writeln('111');
     }
 }

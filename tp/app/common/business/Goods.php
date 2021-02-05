@@ -365,4 +365,29 @@ class Goods extends BaseBusiness
         return $result;
     }
 
+    /**
+     * 修改库存操作
+     * @param $data // 商品信息
+     * @param string $update // 增加库存或者减少库存,默认减少库存
+     * @return bool
+     */
+    public function updateStock($data, $update = "dec")
+    {
+        try {
+            if ($update == "dec") {     // 减库存
+                foreach ($data as $value) {
+                    $this->model->decStock($value['goods_id'], $value['num']);
+                }
+            } elseif ($update == "inc") {   // 加库存
+                foreach ($data as $value) {
+                    $this->model->incStock($value['goods_id'], $value['num']);
+                }
+            }
+
+        } catch (\Exception $exception) {
+            return false;
+        }
+        return true;
+    }
+
 }
